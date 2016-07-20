@@ -17,10 +17,9 @@ namespace WebPP {
     class Blueprint {
         public:
         const std::string name;
+
         Blueprint(const std::string);
-        std::string get_name() {
-            return this->name;
-        }
+        std::string get_name() { return this->name; }
     };
 }
 

@@ -80,6 +80,9 @@ namespace WebPP {
                                 const char *url_prefix
         );
 
+        // TODO: find resource http://stackoverflow.com/questions/17253690/finding-in-a-std-map-using-regex
+        //       app.find(...)
+
         // Getters
         const char* get_static_folder();
         const char* get_static_url_path();
