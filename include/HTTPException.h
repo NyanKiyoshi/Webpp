@@ -11,10 +11,14 @@
 
 
 namespace WebPP {
+    /**
+     * Base descriptor of a HTTPException allow to throw some HTTP errors during the request processing.
+     * The HTTPException and its children will be handled by the application and render a error on the client's browser.
+     */
     class HTTPException : public std::exception {
-        private:
-        virtual int code;
-        virtual int description;
+        protected:
+        virtual int _code;
+        virtual int _description;
 
         public:
         void get_body(char *buffer) const;
@@ -23,11 +27,11 @@ namespace WebPP {
         Response generated_response() const;
 
         int get_code() const {
-            return this->code;
+            return this->_code;
         }
 
         int get_description() const {
-            return this->description;
+            return this->_description;
         }
     };
 

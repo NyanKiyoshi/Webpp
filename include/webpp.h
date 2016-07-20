@@ -12,6 +12,9 @@
 
 
 namespace WebPP {
+    /**
+     * Controller of this framework, it manages everything.
+     */
     class Webpp {
         private:
 

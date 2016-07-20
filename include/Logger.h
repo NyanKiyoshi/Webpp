@@ -5,7 +5,10 @@
 #ifndef WEBPP_LOGGER_H
 #define WEBPP_LOGGER_H
 
-namespace WebPP{
+namespace WebPP {
+    /**
+     * Allows an easier logging of the app.
+     */
     class Logger {};
 }
 

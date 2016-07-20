@@ -19,6 +19,9 @@ namespace WebPP {
         unsigned char paddingData[paddingLength];
     } FCGI_Record;
 
+    /**
+     * FIXME: will probably be removed soon. Not decided yet.
+     */
     class RequestHandler {
         public:
 //        RequestHandler(template_t &(*body), int response_code = 200);

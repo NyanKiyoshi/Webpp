@@ -8,9 +8,16 @@
 #include <bits/stl_map.h>
 
 
-typedef char *template_t;
 
 namespace WebPP {
+    typedef char *template_t;
+
+    /**
+     * A base Response object that will be used to render a response to the client.
+     * At the end of the request processing, the render() method of this object or of its child we be called
+     * and used to send a HTTP response to the client if there was no error.
+     * This object must be returned during the view processing.
+     */
     class Response {
         private:
         template_t body;

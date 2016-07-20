@@ -8,6 +8,10 @@
 #include <webpp.h>
 using namespace WebPP;
 
+/**
+ * Testing purposes.
+ * Will be removed as soon as it will become useless.
+ */
 class MainWebpp {
 
     private:
