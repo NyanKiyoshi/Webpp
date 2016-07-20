@@ -3,3 +3,8 @@
 //
 
 #include "Blueprint.h"
+
+
+WebPP::Blueprint::Blueprint(std::string bp_name) : name(bp_name) {
+
+}

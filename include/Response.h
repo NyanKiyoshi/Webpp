@@ -5,9 +5,7 @@
 #ifndef WEBPP_RESPONSE_H
 #define WEBPP_RESPONSE_H
 #include <inttypes.h>
-#include <bits/stl_map.h>
 #include "types.h"
-
 
 
 namespace WebPP {

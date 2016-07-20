@@ -1,10 +1,12 @@
 #ifndef WEBPP_WEBPP_H
 #define WEBPP_WEBPP_H
 
-
+#include <map>
 #include "Logger.h"
 #include "Response.h"
 #include "RequestHandler.h"
+#include "Blueprint.h"
+#include "types.h"
 
 
 // TODO: send files
@@ -12,8 +14,12 @@
 
 
 namespace WebPP {
+    // Type of functions to call
     typedef void (*before_request_function_t)(RequestHandler request);
     typedef void (*after_request_function_t)(RequestHandler request, Response response);
+
+    // Blueprints
+    typedef std::string str_blueprint_name_t;
 
     /**
      * Controller of this framework, it manages everything.
@@ -27,6 +33,10 @@ namespace WebPP {
 
         // Templates
         const char *template_folder;
+
+        // List of registered blueprints
+        // <instance name, instance>
+        std::map<const str_blueprint_name_t, Blueprint*> blueprints = {};
 
         // Logger
         Logger logger;
@@ -60,6 +70,15 @@ namespace WebPP {
 
         // register a after request
         void after_request(after_request_function_t fn);
+
+        // register a blueprint
+        // FIXME: let's decide if the blueprint must be a const of the Blueprint instance
+        void register_blueprint(Blueprint *bp);
+        void register_blueprint(Blueprint *bp,
+                                const char *static_folder, const char *static_url_path,
+                                const char *template_folder,
+                                const char *url_prefix
+        );
 
         // Getters
         const char* get_static_folder();

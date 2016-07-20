@@ -15,8 +15,8 @@ namespace WebPP {
         unsigned char contentLengthB0;
         unsigned char paddingLength;
         unsigned char reserved;
-        unsigned char contentData[contentLength];
-        unsigned char paddingData[paddingLength];
+//        unsigned char contentData[contentLength];
+//        unsigned char paddingData[paddingLength];
     } FCGI_Record;
 
     /**

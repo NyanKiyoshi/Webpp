@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "webpp.h"
 
 
@@ -37,4 +38,18 @@ void WebPP::Webpp::before_request(before_request_function_t fn) {
 
 void WebPP::Webpp::after_request(after_request_function_t fn) {
 
+}
+
+void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp) {
+    assert(this->blueprints.count(bp->get_name()) < 1 && "A Blueprint has already been registered under this name.");
+    this->blueprints[bp->name] = bp;
+}
+
+void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp,
+                                      const char *static_folder, const char *static_url_path,
+                                      const char *template_folder, const char *url_prefix) {
+    this->register_blueprint(bp);
+    // TODO
+    // We should call Blueprint.register(...) or something like that.
+    // Because someone should add rules in our app to allow to easily go through the subdomains and urls.
 }
