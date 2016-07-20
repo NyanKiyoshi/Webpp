@@ -12,6 +12,9 @@
 
 
 namespace WebPP {
+    typedef void (*before_request_function_t)(RequestHandler request);
+    typedef void (*after_request_function_t)(RequestHandler request, Response response);
+
     /**
      * Controller of this framework, it manages everything.
      */
@@ -36,7 +39,7 @@ namespace WebPP {
         // TODO: extensions
 
         public:
-        // TODO: should we set the default static folder as "static"? Webpp(const char *static_folder = "static");
+        // TODO: should we set the default static folder as = "static"? Webpp(const char *static_folder = "static");
 
         // create app
         Webpp();
@@ -46,19 +49,17 @@ namespace WebPP {
         // TODO: map regexp routes
         // TODO: get options as dict
         // register routes
-        void route(char *url, void (*fn)(...));
-        void route(char *urls[], void (*fn)(...));  // array of "char *url"
+        void route(char *url,    void (*fn)(...), http_headers_t headers = {});
+        void route(char *urls[], void (*fn)(...), http_headers_t headers = {});  // array of "char *url"
 
         // register extensions
             // will call init() ... blblbl
 
         // register a before request
-        void before_request(void (*fn)());
-        void before_request(void (*fn)(RequestHandler request));
+        void before_request(before_request_function_t fn);
 
         // register a after request
-        void after_request(void (*fn)(Response response));
-        void after_request(void (*fn)(RequestHandler request, Response response));
+        void after_request(after_request_function_t fn);
 
         // Getters
         const char* get_static_folder();

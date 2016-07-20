@@ -23,26 +23,18 @@ const char *WebPP::Webpp::get_template_folder() {
     return this->template_folder;
 }
 
-void WebPP::Webpp::route(char *url, void (*fn)(...)) {
+void WebPP::Webpp::route(char *url, void (*fn)(...), WebPP::http_headers_t headers) {
 
 }
 
-void WebPP::Webpp::route(char *urls[], void (*fn)(...)) {
+void WebPP::Webpp::route(char *urls[], void (*fn)(...), WebPP::http_headers_t headers) {
 
 }
 
-void WebPP::Webpp::before_request(void (*fn)(RequestHandler request)) {
+void WebPP::Webpp::before_request(before_request_function_t fn) {
 
 }
 
-void WebPP::Webpp::after_request(void (*fn)(RequestHandler request, Response response)) {
-
-}
-
-void WebPP::Webpp::after_request(void (*fn)(WebPP::Response)) {
-
-}
-
-void WebPP::Webpp::before_request(void (*fn)()) {
+void WebPP::Webpp::after_request(after_request_function_t fn) {
 
 }

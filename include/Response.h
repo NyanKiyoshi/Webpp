@@ -6,12 +6,11 @@
 #define WEBPP_RESPONSE_H
 #include <inttypes.h>
 #include <bits/stl_map.h>
+#include "types.h"
 
 
 
 namespace WebPP {
-    typedef char *template_t;
-
     /**
      * A base Response object that will be used to render a response to the client.
      * At the end of the request processing, the render() method of this object or of its child we be called
@@ -23,7 +22,7 @@ namespace WebPP {
         template_t body;
         uint16_t code = 200;
 
-        std::map headers;  // will be updated by WebPP if HEADER({...}) was set
+        http_headers_t headers;  // will be updated by WebPP if HEADER({...}) was set
 
         public:
         Response();
