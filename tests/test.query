@@ -1,0 +1,11 @@
+GET / HTTP/1.1
+Host: imgur.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en,en-GB;q=0.8,en-US;q=0.5,fr;q=0.3
+Accept-Encoding: gzip, deflate
+DNT: 1
+Cookie: __qca=P0-2141238276-1458393369502; authautologin=83ec74018aae65ffd877be049d6abab1%7EUVlf2DSB6HopDAHuAstx57fjL7cjikWK; _nc=1; IGT=1; __cfduid=ddf9491b0569ff8b8f50dcf447002e8651461963473; __atuvc=0%7C16%2C0%7C17%2C0%7C18%2C1%7C19%2C1%7C20; AZUSER=ue1-8ea01aa8407c496c8d5c1c0f6bd76e05; betabeowulf=1; IMGURUIDJAFO=078ff7c4223ab92d749e7bb4e23e90459d284bb9447566ac40f093dc35cc321a; SESSIONDATA=%7B%22sessionCount%22%3A53%2C%22sessionTime%22%3A1469042732751%7D; m_sort=score; m_window=all; m_section=hot; c_sort=newest; c_window=day; f_sort=newest; __gads=ID=f429d153e79bbdfd:T=1468864067:S=ALNI_MZ10WsvgzAxGy645FLrWhdUc5aa6Q; IMGURSESSION=fj03r54ehsfo7qdg0sro54thb2; retina=0
+Connection: keep-alive
+
+/* XXX: This method badly needs refactoring: should switch by core type. <mbp> */
