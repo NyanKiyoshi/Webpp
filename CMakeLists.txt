@@ -9,6 +9,8 @@ list(APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} -g -ftest-coverage -f
 include_directories("./include/")
 add_library(${PROJECT_NAME} ${SRC_LIST} ${HEADERS_LIST})
 
-target_link_libraries(${PROJECT_NAME} fcgi)
+#     ->   -Idependancies\libfcgi\include -Ldependancies -O2 *.cpp -lfcgi [NOT USED]
+#     -> -lfcgi++ -lfcgi                                                    [USED]
+target_link_libraries(${PROJECT_NAME} fcgi fcgi++)
 
 add_executable(main_webpp ${SRC_LIST})
