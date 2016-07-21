@@ -65,8 +65,8 @@ void WebPP::Webpp::run() {
     FCGX_InitRequest(&(this->request), 0, 0);
 
     while (FCGX_Accept_r(&(this->request)) == 0) {
-        insensitive_http_headers_t h = {{"X-Hello", "Null."}, {"X-test", "X-done"}};  // REMOVE-ME
-        Response resp = Response((char *)"TPL/BODY\n", 200, "TEXT/HTML", &h);
+        insensitive_http_headers_t h = {{"Content-type", "Null."}, {"X-test", "X-done"}, {"X-Test", "X-doxxne"}};  // REMOVE-ME
+        Response resp = Response((char *)"TPL/BODY\n", 200, "text/html", &h);         // REMOVE-ME
         this->write_to_fastcgi(&resp);
     }
 }
