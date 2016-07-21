@@ -26,8 +26,11 @@ namespace WebPP {
         Response();
         Response(template_t body, uint16_t response_code = 200);
 
+        void generate_raw_headers(std::string &buffer);
+        void generate_raw_body(std::string &buffer);
+
         // will be used to render the response and will return the content
-        virtual void render(std::string &buffer);
+        virtual void render(std::string&);
     };
 }
 

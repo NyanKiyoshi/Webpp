@@ -65,7 +65,7 @@ void WebPP::Webpp::run() {
     FCGX_InitRequest(&(this->request), 0, 0);
 
     while (FCGX_Accept_r(&(this->request)) == 0) {
-        ResponseFromTemplate resp = ResponseFromTemplate((char *)"/");
+        Response resp = Response((char *)"TPL/BODY");
         this->write_to_fastcgi(&resp);
     }
 }
@@ -75,7 +75,7 @@ inline void WebPP::Webpp::start_wrtting_to_fastcgi_buffers() {
     fcgi_streambuf cout_fcgi_streambuf(request.out);
     fcgi_streambuf cerr_fcgi_streambuf(request.err);
 
-    // FIXME: it creates null ptr!!!
+    // FIXME: we are creating null pointers
     std::cin.rdbuf(&cin_fcgi_streambuf);
     std::cout.rdbuf(&cout_fcgi_streambuf);
     std::cerr.rdbuf(&cerr_fcgi_streambuf);
@@ -91,15 +91,12 @@ inline void WebPP::Webpp::write_to_fastcgi(Response *response) {
     std::cout.rdbuf(&cout_fcgi_streambuf);
     std::cerr.rdbuf(&cerr_fcgi_streambuf);
 
-    std::string buffer = "";
+    std::string buffer;
     response->render(buffer);
 
 //    this->start_wrtting_to_fastcgi_buffers();
 
-    std::cout << "Content-type: text/html\r\n"
-              << "\r\n"   // Don't remove (RFC2616 section 6)
-              << buffer
-              << "\r\n";
+    std::cout << buffer;
 
     this->stop_wrtting_to_fastcgi_buffers();
 }
