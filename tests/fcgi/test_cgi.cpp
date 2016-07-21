@@ -30,7 +30,7 @@ int main(void) {
              << "    <title>^w^!</title>\n"
              << "  </head>\n"
              << "  <body>\n"
-             << "    <h1>OwO!</h1>\n"
+             << "    <h1>It is working.</h1>\n"
              << "  </body>\n"
              << "</html>\n";
 

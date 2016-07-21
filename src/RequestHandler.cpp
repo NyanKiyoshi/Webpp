@@ -2,7 +2,7 @@
 
 
 /**
- * Following the RFC7230.
+ * Following the RFC7230 and RFC2145.
  * As the RFC7230 says in A.2 "The expectation to support HTTP/0.9 requests has been removed.", the HTTP/0.9
  * requests will be no longer handled.
  */
