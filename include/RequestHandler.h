@@ -6,19 +6,6 @@
 
 
 namespace WebPP {
-    typedef struct {
-        unsigned char version;
-        unsigned char type;
-        unsigned char requestIdB1;
-        unsigned char requestIdB0;
-        unsigned char contentLengthB1;
-        unsigned char contentLengthB0;
-        unsigned char paddingLength;
-        unsigned char reserved;
-//        unsigned char contentData[contentLength];
-//        unsigned char paddingData[paddingLength];
-    } FCGI_Record;
-
     /**
      * FIXME: will probably be removed soon. Not decided yet.
      */
@@ -26,11 +13,10 @@ namespace WebPP {
         public:
 //        RequestHandler(template_t &(*body), int response_code = 200);
 
-        void t(FCGI_Record &fcgi_record);
         void decode_query();
 
         void parse_request();
-        inline void extract_version(char *version);
+        inline void extract_version(char *version);  // https://tools.ietf.org/html/rfc2145 ?
 
         /*
    +------+-------------------------------+--------------------------+

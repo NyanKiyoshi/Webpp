@@ -1,7 +1,9 @@
 #ifndef WEBPP_WEBPP_H
 #define WEBPP_WEBPP_H
 
+#include <iostream>
 #include <map>
+#include <fcgio.h>
 #include "Logger.h"
 #include "Response.h"
 #include "RequestHandler.h"
@@ -41,6 +43,16 @@ namespace WebPP {
         // Logger
         Logger logger;
 
+
+        std::streambuf *cin_streambuf = std::cin.rdbuf();
+        std::streambuf *cout_streambuf = std::cout.rdbuf();
+        std::streambuf *cerr_streambuf = std::cerr.rdbuf();
+        FCGX_Request request;
+
+        inline void start_wrtting_to_fastcgi_buffers();
+        inline void write_to_fastcgi(char *buffer);
+        inline void stop_wrtting_to_fastcgi_buffers();  // restores IO stream buffers
+
         // TODO: config
         // TODO: views
         // TODO: before requests
@@ -54,6 +66,9 @@ namespace WebPP {
         // create app
         Webpp();
         Webpp(const char *static_folder, const char *static_url_path, const char *template_folder);
+
+        void run();     // uses fastcgi and wait for requests
+        void serve();   // TODO: serves a HTTPServer and wait for requests
 
         // TODO: set headers from route or HEADERS({...})
         // TODO: map regexp routes
