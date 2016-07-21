@@ -18,19 +18,25 @@ namespace WebPP {
     class Response {
         private:
         template_t body;
-        uint16_t code = 200;
+        uint16_t code;
+        std::string mime_type;
+        public:
+        void set_mimetype(const std::string &mime_type);
 
-        http_headers_t headers;  // will be updated by WebPP if HEADER({...}) was set
+        private:
+        insensitive_http_headers_t *headers;  // will be updated by WebPP if HEADER({...}) was set
 
         public:
-        Response();
-        Response(template_t body, uint16_t response_code = 200);
+        Response(template_t body, uint16_t response_code = 200,
+                 std::string mimetype = "text/html", insensitive_http_headers_t *headers = {});
 
-        void generate_raw_headers(std::string &buffer);
+        void generate_raw_headers(std::ostringstream &string_stream);
         void generate_raw_body(std::string &buffer);
 
         // will be used to render the response and will return the content
         virtual void render(std::string&);
+
+        Response();
     };
 }
 

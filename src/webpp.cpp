@@ -25,11 +25,11 @@ const char *WebPP::Webpp::get_template_folder() {
     return this->template_folder;
 }
 
-void WebPP::Webpp::route(char *url, void (*fn)(...), WebPP::http_headers_t headers) {
+void WebPP::Webpp::route(char *url, void (*fn)(...), WebPP::insensitive_http_headers_t *headers) {
 
 }
 
-void WebPP::Webpp::route(char *urls[], void (*fn)(...), WebPP::http_headers_t headers) {
+void WebPP::Webpp::route(char *urls[], void (*fn)(...), WebPP::insensitive_http_headers_t *headers) {
 
 }
 
@@ -65,7 +65,8 @@ void WebPP::Webpp::run() {
     FCGX_InitRequest(&(this->request), 0, 0);
 
     while (FCGX_Accept_r(&(this->request)) == 0) {
-        Response resp = Response((char *)"TPL/BODY");
+        insensitive_http_headers_t h = {{"X-Hello", "Null."}, {"X-test", "X-done"}};  // REMOVE-ME
+        Response resp = Response((char *)"TPL/BODY\n", 200, "TEXT/HTML", &h);
         this->write_to_fastcgi(&resp);
     }
 }

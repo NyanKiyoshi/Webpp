@@ -8,7 +8,6 @@
 #include "Response.h"
 #include "RequestHandler.h"
 #include "Blueprint.h"
-#include "types.h"
 
 
 // TODO: send files
@@ -74,8 +73,8 @@ namespace WebPP {
         // TODO: map regexp routes
         // TODO: get options as dict
         // register routes
-        void route(char *url,    void (*fn)(...), http_headers_t headers = {});
-        void route(char *urls[], void (*fn)(...), http_headers_t headers = {});  // array of "char *url"
+        void route(char *url,    void (*fn)(...), insensitive_http_headers_t *headers = {});
+        void route(char *urls[], void (*fn)(...), insensitive_http_headers_t *headers = {});  // array of "char *url"
 
         // register extensions
             // will call init() ... blblbl
