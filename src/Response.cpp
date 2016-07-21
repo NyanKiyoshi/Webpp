@@ -13,6 +13,6 @@ WebPP::Response::Response() {
 
 }
 
-void WebPP::Response::render(char *buffer) {
-
+void WebPP::Response::render(std::string &buffer) {
+    buffer += "RESPONSE.";
 }

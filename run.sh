@@ -1,8 +1,16 @@
-/home/sayuri/bin/clion-1.0.4/bin/cmake/bin/cmake \
-    --build /home/sayuri/.clion10/system/cmake/generated/8eaf02d3/8eaf02d3/Debug \
-    --target main_webpp \
+#!/usr/bin/env bash
+
+TARGET="main_webpp"
+DEST_PATH="/tmp/cmake/generated/${TARGET}/Debug"
+DEST_PATH="/home/sayuri/.CLion2016.2/system/cmake/generated/Webpp-8eaf02d3/8eaf02d3/Debug/"
+mkdir -p ${DEST_PATH}
+
+
+cmake \
+    --build ${DEST_PATH} \
+    --target ${TARGET} \
     -- \
     -j 8 \
 && \
 spawn-fcgi -p 8000 \
-    -n /home/sayuri/.clion10/system/cmake/generated/8eaf02d3/8eaf02d3/Debug/main_webpp
+    -n ${DEST_PATH}${TARGET}

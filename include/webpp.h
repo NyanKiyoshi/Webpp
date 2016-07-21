@@ -50,7 +50,7 @@ namespace WebPP {
         FCGX_Request request;
 
         inline void start_wrtting_to_fastcgi_buffers();
-        inline void write_to_fastcgi(char *buffer);
+        inline void write_to_fastcgi(Response *response);
         inline void stop_wrtting_to_fastcgi_buffers();  // restores IO stream buffers
 
         // TODO: config

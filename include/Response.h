@@ -27,7 +27,7 @@ namespace WebPP {
         Response(template_t body, uint16_t response_code = 200);
 
         // will be used to render the response and will return the content
-        virtual void render(char *buffer);
+        virtual void render(std::string &buffer);
     };
 }
 

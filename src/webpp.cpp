@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <ResponseFromTemplate.h>
 #include "webpp.h"
 
 
@@ -64,7 +65,8 @@ void WebPP::Webpp::run() {
     FCGX_InitRequest(&(this->request), 0, 0);
 
     while (FCGX_Accept_r(&(this->request)) == 0) {
-        this->write_to_fastcgi((char *)"Hello");
+        ResponseFromTemplate resp = ResponseFromTemplate((char *)"/");
+        this->write_to_fastcgi(&resp);
     }
 }
 
@@ -79,8 +81,7 @@ inline void WebPP::Webpp::start_wrtting_to_fastcgi_buffers() {
     std::cerr.rdbuf(&cerr_fcgi_streambuf);
 }
 
-// TODO: get a Response instance
-inline void WebPP::Webpp::write_to_fastcgi(char *buffer) {
+inline void WebPP::Webpp::write_to_fastcgi(Response *response) {
     fcgi_streambuf cin_fcgi_streambuf(this->request.in);
     fcgi_streambuf cout_fcgi_streambuf(this->request.out);
     fcgi_streambuf cerr_fcgi_streambuf(this->request.err);
@@ -89,6 +90,9 @@ inline void WebPP::Webpp::write_to_fastcgi(char *buffer) {
     std::cin.rdbuf(&cin_fcgi_streambuf);
     std::cout.rdbuf(&cout_fcgi_streambuf);
     std::cerr.rdbuf(&cerr_fcgi_streambuf);
+
+    std::string buffer = "";
+    response->render(buffer);
 
 //    this->start_wrtting_to_fastcgi_buffers();
 
