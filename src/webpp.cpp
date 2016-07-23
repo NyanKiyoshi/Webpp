@@ -34,11 +34,11 @@ void WebPP::Webpp::add_route(char **urls, void (*fn)(...), std::set<const char*>
 
 }
 
-void WebPP::Webpp::before_request(before_request_function_t fn) {
+void WebPP::Webpp::before_request(t_before_request_function fn) {
 
 }
 
-void WebPP::Webpp::after_request(after_request_function_t fn) {
+void WebPP::Webpp::after_request(t_after_request_function fn) {
 
 }
 

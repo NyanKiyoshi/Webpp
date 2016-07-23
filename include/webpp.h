@@ -8,8 +8,8 @@
 #include <set>
 #include "Logger.h"
 #include "Response.h"
-#include "RequestHandler.h"
 #include "Blueprint.h"
+#include "Request.h"
 
 
 #define DEFAULT_THREAD_COUNT 20
@@ -32,8 +32,8 @@
 
 namespace WebPP {
     // Type of functions to call
-    typedef void (*before_request_function_t)(RequestHandler request);
-    typedef void (*after_request_function_t)(RequestHandler request, Response response);
+    typedef void (*t_before_request_function)(Request);
+    typedef void (*t_after_request_function)(Request, Response);
 
     // Blueprints
     typedef std::string str_blueprint_name_t;
@@ -100,7 +100,7 @@ namespace WebPP {
             // will call init() ... blblbl
 
         // register a before request
-        void before_request(before_request_function_t fn);
+        void before_request(t_before_request_function fn);
 
         /**
          * Call every registered `before_request` after having generated the Request object and before calling
@@ -110,13 +110,13 @@ namespace WebPP {
         void preprocess_request(Request request);
 
         // register a after request
-        void after_request(after_request_function_t fn /* TODO: should receive a Response parameter */);
+        void after_request(t_after_request_function fn);
 
         /**
          * Call every registered `after_request` after having called the view and rendered the Response just
          * before sending the generated response.
          */
-        void process_response(/* Response */);
+        void process_response(Request request, Response response);
 
         // register a blueprint
         // FIXME: let's decide if the blueprint must be a const of the Blueprint instance
