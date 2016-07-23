@@ -1,0 +1,43 @@
+C++ CGI Wrapper Documentation -- http://www.purplepixie.org/cgi
+
+           * CHANGES: Change Log for CGI Wrapper *
+
+---------------------------------------------------------------
+
+1.00: First Beta Release
+
+1.01: First Stable Release
+	* Moved over to using Set() rather than Add() in the
+	  AutoLoad() method.
+	* Small BugFixes/Tweaks Various
+
+1.01 - 1.45 Development Versions
+
+2.00: Version 2 Final Development Version/Beta Test
+	* Implementation of HiddenDump() Method
+
+2.01: Development Version
+
+2.02: Version 2 Stable Release
+	* Implementation of GetDump() Method
+
+2.03: Version 2 Stable Release with BugFix
+	* Plus (+) GetDump() Method URL Encode Bug
+	  where plus sign not encoded so was read as
+	  a space fixed.
+
+2.04 Development Version
+	* Initial Implementation of ReturnValidPointer
+
+2.05 Version 2 Stable Release with Added Features
+	* Full Implementation of ReturnValidPointer
+
+2.06 Beta-Test of New Features/Semi-Stable Release
+	* First implementation of Cookie support
+
+2.07 BugFix RVP Release
+	* Fixed ReturnValidPointer Bug
+	* Tested new features in 2.06 and stable for
+	inclusion but not use (semi-stable still for
+	use)
+

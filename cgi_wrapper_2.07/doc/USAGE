@@ -1,0 +1,143 @@
+C++ CGI Wrapper Documentation -- http://www.purplepixie.org/cgi
+
+               * USAGE: Using the Wrapper *
+
+---------------------------------------------------------------
+
+The wrapper can be compiled into your CGI source code using
+one of the methods in the COMPILATION document. This document
+briefly details the use of the wrapper in your code. More
+detailed information can be found in the REFERENCE document.
+
+1. Creating and Initialising the Wrapper
+
+The wrapper is a C++ class called CGI_Wrapper. You can
+initialise an instantiation of the wrapper with the new
+statement as:
+
+CGI_Interface *cgi=new CGI_Interface();
+
+You may optionally provide a bool flag to the constructor
+setting the PrintError flag. This defaults to false and
+controls the output of textual errors from functions.
+
+2. Loading Data into the Wrapper
+
+Once we have initialised the interface we will want to
+ask it to gather HTTP variable information from the
+appropriate source. The GET method passes information
+as an extention of the URL and must be parsed from the
+QUERY_STRING environment variable. POST input arrives
+from stdin (as if the user was typing the variables).
+
+Please note that whichever input method, this data will
+be specially encoded with representational hexidecimal
+values for characters deemed 'special' and the + sign
+for a space. The wrapper will automatically parse and
+decode this input.
+
+You have a choice of two methods to gather information
+into the interface, AutoLoad and StringLoad. AutoLoad is
+most commonly used and will handle the different methods
+automatically. StringLoad is used by passing a urlencoded
+string containing one or more variables and their values.
+You may wish to handle or pre-parse input directly in
+your CGI and, if so, you can then call StringLoad with
+the remaining/reformatted urlencoded string. For our
+purposes in this document we shall not discuss the use
+of StringLoad in detail, please consult the REFERENCE
+document for more information.
+
+Using AutoLoad is very simple and is done with no
+parameters. It will return an integer of the number
+of variables found or -1 on error. An example would
+be:
+
+CGI_Interface *cgi=new CGI_Interface();
+int Loaded=cgi->AutoLoad();
+
+3. Querying the Variable List
+
+Once the variables have been loaded we can request a
+variable with the Fetch method. Fetch takes a const char*
+argument as the CASE SENSITIVE name of the variable. If
+there is no such variable, the method will return a 0
+or else it will return a char pointer to the value for
+that variable (a zero length string for a pointer greater
+than 0 means the variable was passed with no value).
+
+Versions 2.05 onward support the ReturnValidPointer flag
+and can return a null-string rather than a 0 if the
+Fatch fails to match a variable. Please see the
+REFERENCE section for further information about this.
+
+Versions 2.06 onward support Cookies for data persistance.
+Please see the REFERENCE section for more information.
+
+Please note that in order to save you having to create
+your own buffers to read variables for use this function
+passes back a pointer to the actual string in the
+CGI_Variable linked list. Although this is probably
+bad practice and I have made no effort to ensure that
+nothing goes horribly wrong it does seem the easiest
+interface to use. Please DO NOT update this char
+array directly (use the Set function detailed in the
+REFERENCE document) as horrible things will probably
+happen.
+
+Fetch would be used as follows:
+
+char *value=cgi->Fetch("Variable_Name");
+if (value) // found
+else // no such variable
+
+4. Outputting the Data
+
+As of version 2.02 the wrapper also performs certain
+data persistance tasks using the HiddenDump() and GetDump()
+methods. These will allow all variables to be output
+in HTML in a format suitable for use in a form of as
+part of a URL.
+
+These are fully documented in the REFERENCE section of
+this documentation but a quick and simple guide would
+be something like:
+
+printf("<form action=mycgi.cgi method=post>");
+cgi->HiddenDump();
+printf("<input type=submit value=Go></form>");
+
+Would fill the space between the form and submit with
+<input type=hidden name=VariableName value="Variable Value">
+
+And GetDump() can be used like:
+
+printf("<a href=mycgi.cgi?");
+cgi->GetDump();
+printf(">Click Here</a>");
+
+Would produce the output:
+
+<a href=mycgi.cgi?VarOne=Value&VarTwo=Value>
+
+The GetDump will encode each string in URL format, please
+note as of 2.02 this applies to the VALUE only.
+
+5. Finishing Off
+
+Well actually that's about it apart from cleaning up.
+To avoid memory leakage you should always delete the
+wrapper instantiation before terminating your program.
+This is accomplished using delete as follows:
+
+delete cgi;
+
+Would cause the CGI Interface to delete all the
+linked list nodes for the variables.
+
+Further information can be obtained from the REFERENCE
+document.
+
+Please report any bugs, errata or any other weirdnesses
+to dcutting at purplepixie.org
+

@@ -1,0 +1,55 @@
+C++ CGI Wrapper Documentation -- http://www.purplepixie.org/cgi
+
+    * COMPILATION: Compiling the Wrapper Into Your Code *
+
+---------------------------------------------------------------
+
+You can include the wrapper into your project very simply one
+of two ways. The most common method is to simply include the
+entire source code and compile it with your application each
+time.
+
+You can accomplish this by having the two files:
+
+cgi_interface.cpp and
+cgi_interface.h
+
+In your project directory and including the .cpp file with
+
+#include "cgi_interface.cpp"
+
+Somewhere near the top of your main program code. This, as I
+have stated, will then cause the CGI_Interface system to be
+compiled with your project.
+
+This will work and most sensible compilers will skip most of
+their checks on these files when they are not modified. The
+files are quite small anyway and don't take much time to
+compile.
+
+On newer versions of GCC you may have to use the stdc++ library
+at compile time by adding the -lstdcc++ switch.
+
+A slightly quicker and perhaps neater option is to pre-compile
+the CGI_Wrapper into object code, include just the .h file
+and pass the object to the compiler on the command line. I'm
+not sure how to do this on your fancy-ass windoze compilers
+but here's how to do it under gcc:
+
+First, in the src directory of the cgi_wrapper download you
+need to compile the .cpp file into object code with:
+
+$ gcc -lstdcc++ -c cgi_wrapper.cpp -o cgi_wrapper.o
+
+Missing the -c flag will attempt to make gcc build an executable
+which will fail as there is no entry point.
+
+Now, move the cgi_wrapper.h and .o files into your development
+directory. You will need to include the .h file somewhere near
+the top of your main program file. Use the wrapper as normal.
+When compiling your project you will now need to link to the
+pre-built cgi_wrapper object or you will get fatal Unresolved
+External errors at the link stage. Under gcc this would be:
+
+$ gcc -lstdc++ MyProject.cpp cgi_wrapper.o -o MyProject
+

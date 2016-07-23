@@ -1,0 +1,71 @@
+C++ CGI Wrapper Documentation -- http://www.purplepixie.org/cgi
+
+         * COOKIES: Using Cookies with the Wrapper *
+
+---------------------------------------------------------------
+
+Cookies are a method of asking the client to persist data to
+the web server. You should be familiar with the rudimentary 
+basics of cookies and how they operate.
+
+The CGI Wrapper can both read and write cookies. To set a 
+cookie you can call the global (not a member of the CGI Wrapper
+object) function SetCookie(const char *name, const char* value)
+
+Please note that a cookie will only be provided by the client
+for the next page requested - it will *not* be available in the
+cookie list as soon as it is set (to the same instantiation).
+
+Cookies are provided to the Web Server by the client and from
+the Web Server to the CGI in the HTTP_COOKIE environment
+variable.
+
+You can load the cookies into the list using the LoadCookie
+method.
+
+Example:
+
+CGI One:
+
+SetCookie("MyCookie","hello");
+SetCookie("OtherCookie","somevalue");
+SetCookie("MyCookie","goodbye");
+printf("Content-type: text/html\n\n");
+printf("<html><a href=two.cgi>click</a></html>");
+
+CGI Two:
+
+CGI_Interface *CGI=new CGI_Interface();
+CGI->CookieLoad();
+printf("Content-type: text/html\n\n");
+CGI->PrintDump();
+delete CGI;
+
+Would set the cookies in the first CGI and then display
+MyCookie and OtherCookie in the second. Please note that
+owing to the way cookies and then the StringLoad mechanism
+work the LAST cookie value set/received will be valid, so
+in this instance:
+
+1: MyCookie: goodbye
+2: OtherCookie: somevalue
+
+Should be displayed by CGI 2.
+
+You may wish to keep Cookie and "Normal" (manually persisted
+or locally passed) data in seperate lists. This allows you
+to identify what comes from where, not have input values
+over-riding cookie values and not outputting the cookie values
+every time you do a QueryDump or HiddenDump.
+
+Example:
+
+CGI_Interface *CGI=new CGI_Interface();
+CGI_Interface *Cookie=new CGI_Interface();
+CGI->AutoLoad();
+Cookie->CookieLoad();
+
+Would easily allow this. If you then want to, you can still
+output both lists from a Dump function.
+
+

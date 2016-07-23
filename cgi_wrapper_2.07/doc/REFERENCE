@@ -1,0 +1,214 @@
+C++ CGI Wrapper Documentation -- http://www.purplepixie.org/cgi
+
+           * REFERENCE: Wrapper Software Reference *
+
+---------------------------------------------------------------
+
+The actual data is stored as a linked list of CGI_Variable
+class nodes. The actual definition of this class and it's
+members etc is not of important to the user generally. If
+you wish to use it directly I would encourage you to have a
+look at the source code.
+
+The user-interface class is CGI_Interface and it is defined
+with the following public members and methods:
+
+class CGI_Interface
+
+Members:
+
+ bool PrintError;
+ char NullString[LENMAX_VAR_NULLSTRING];
+ bool ReturnValidPointer; 
+
+Methods:
+
+ CGI_Interface(bool pError=false);
+ int AutoLoad(void);
+ int CookieLoad(void);
+ void PrintDump(void);
+ int StringLoad(const char *input);
+ char* Fetch(const char *name, bool UseReturnValidPointer);
+ int Set(const char *name, const char *value);
+ int HiddenDump(void);
+ int GetDump(void);
+ ~CGI_Interface();
+
+The PrintError flag determines if a routine (such as
+AutoLoad for example) should print textual error output
+to the screen as well as returning it's error value. This
+can be useful for debugging when you are not bothing
+to test the return values of methods.
+
+The ReturnValidPointer flag and the associated char
+array NullString are included as of version 2.5 and
+address a niggle of having to check a Fetch() result
+against 0 before entering a string based evaluation.
+
+With ReturnValidPointer set (it is not by default), a
+pointer to NullString will be returned if Fetch fails
+to find a matching variable. You can differentiate
+between a found and null-length variable and an unfound
+variable by comparing the pointer returned by Fetch
+and NullString. Alternatively you may like to set
+NullString to a meaningful value. It defaults to the
+size set by LENMAX_VAR_NULLSTRING (2 as shipped) and
+the constructor fills the string with zeros.
+
+Fetch also takes a bool UseReturnValidPointer which
+is a default parameter set to true. Passing false will
+override the ReturnValidPointer flag and always return
+0 if the variable is not found.
+
+Each method and it's uses are detailed as follows:
+
+ CGI_Interface(bool pError=false);
+
+The default constructor. Do NOT call this function
+directly. It will be used by the new operator, and
+a wrapper should be initialisd with a call such as:
+CGI_Wrapper *cgi=new CGI_Wrapper(ERROR_VALUE) where
+ERROR_VALUE is a boolean variable to set the initial
+value of the PrintError flag. This is not a necessary
+argument and will default to false.
+
+ int AutoLoad(void);
+
+The AutoLoad method is the normal method used to load
+data into the list. AutoLoad will first of all determine
+the method with which the CGI is called (GET or POST)
+then act appropriately. POST data is read into a buffer
+from stdin (as of version 1.01 limited to 32k) with this
+data being gained from QUERY_STRING for a GET. Once it
+has filled the input buffer from the relevant source,
+StringLoad is called for this input. AutoLoad returns
+the value returned from StringLoad namely a -1 for
+an error or the number of variables found and added
+to the list. AutoLoad will return a -1 before calling
+StringLoad if it is unable to determine the method
+used. With the PrintError flag set a textual description
+of the error will be output for debugging purposes.
+
+ int CookieLoad(void)
+
+The CookieLoad method loads variables into the list from
+the HTTP_COOKIE environment variable (if it exists). These
+will be decoded as normal and appended/replaced into the
+list. The return integer is the number of variables found
+and loaded in the HTTP_COOKIE variable.
+
+ void PrintDump(void);
+
+PrintDump will (regardless of the PrintError flag)
+output a full list of all the variable names and values
+stored in it's list. This method is provided for debug
+purposes primarily.
+
+ int StringLoad(const char *input);
+
+The StringLoad method parses a URLEncoded string for
+variables and values. Very basically it parses from start
+to finish building the variable name, finding an equal,
+building the variable value and then finding an ampersand
+where it adds the values to the list and starts again or
+EOL upon which it finishes. StringLoad returns a -1 on
+error (text is output if the PrintError flag is set) or
+the number of variables found and added to the list (0
+would mean a valid string etc but no content found). This
+function also handles URL decoding and CAN ONLY deal with
+URL encoded strings. If a 'normal' string is parsed and
+a percent, ampersand or equals is found in the normal text
+things will go horribly wrong.
+
+ char* Fetch(const char *name, bool UseReturnValidPointer);
+
+The Fetch method is called by passing the case sensitive
+name of the variable. If the variable is found in the list
+a char* pointer to the contents is returned (see below).
+When the variable is not in the list the return behaviour
+is controlled by use of the ReturnValidPointer flag in the
+CGI_Interface class. If this flag is set (it is false by
+default) then Fetch will return a pointer to the char
+array NullString which (as mentioned above) is filled with
+0's. You can then operate on this string or check its
+pointer against NullString's. When this flag is not set
+an empty string being returned by Fetch means the varible
+does exist in the list but has the null string as a value.
+
+You can override the operation of ReturnValidPointer by
+passing false as the UseReturnValidPointer parameter (this
+defaults to true and is optional). If UseReturnValidPointer
+is false then Fetch will return the variable contents or
+a 0 as if ReturnValidPointer was itself false.
+
+Please note that the pointer returned is the actual pointer
+to the char array in the linked list containing the variable
+value. This is probably not too safe but make's life a bit
+easier. You should never really change the content of this
+pointer as things can go badly wrong - use the Set method
+instead. 
+
+ int Set(const char *name, const char *value);
+
+Does what it says on the tin - sets a variable with the
+value. Please remember that the variable name is case
+sensitive. If the variable exists then it is updated
+and if not, created and added to the list. Currently
+the function returns just a 1 upon success (and it
+won't fail as it doesn't test anything). I think the
+idea of returning an integer was to be able to show
+if the result was an updated variable or a totally new
+one but this wasn't actually implemented.
+
+ int HiddenDump(void);
+
+This function is designed to be used with a form to
+persist the data as <input type=hidden> fields. When
+invoked it will output to stdout a complete list of
+all variables and values. The output is not URL encoded
+but is parsed for quotation marks which are replaced
+with the %22 code. Use of this feature would involve your
+code outputting a <form> tag before calling this, along
+side any other inputs your wish and then a </form> tag.
+The method returns the number of variables found in the
+list and outputted to stdout.
+
+ int GetDump(void);
+
+This method outputs a list of variable names and values
+in URL format (please note only the value is URL Encoded
+as all variable names must be URL-safe). This will output
+to stdout a list of the form:
+VarOneName=Var+One+Content&VarTwoName=Var+Two+Content
+Suitable for use in, for example, an a href statement or
+for direct GET input. Although this function can be used
+with a form with a get or post method as part of the
+action to persist data, it is suggested you use the
+HiddenDump() method for this.
+
+ ~CGI_Interface();
+
+The destructor. It is always important to properly
+destroy the CGI_Interface instantiation to delete all
+the nodes of the linked list and avoid memory leakage
+problems. Do not call this directly, rather use the
+C++ delete instruction with a line such as:
+delete i;
+
+
+** USING COOKIES **
+
+Versions 2.06 and later support rudimentary cookies.
+Cookies are set using the SetCookie global function
+(from the cookie.h include file). Cookies are loaded
+into the list using the CookieLoad method. Please see
+the COOKIE document for more information.
+
+
+
+If something is not covered in the reference and you
+would like it added please visit the website for
+contact information and request it.
+
+http://www.purplepixie.org/cgi
+

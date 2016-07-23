@@ -1,0 +1,17 @@
+C++ CGI Wrapper Documentation -- http://www.purplepixie.org/cgi
+
+           * TODO: Future Improvements To Be Done *
+
+---------------------------------------------------------------
+
+* DaveLinkedList (DLL) Integration
+	Allow a DLL Object to be passed and loaded into a CGI
+	Wrapper variable list,
+	Planned: for post-version 2 release.
+
+* Session Support
+	A stand-alone session system is vaugely under consideration.
+	This will most-likely consist of a tempfile and/or cookie
+	based method of persisting data without involving the client.
+
+
