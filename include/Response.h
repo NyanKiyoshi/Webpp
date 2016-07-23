@@ -21,7 +21,8 @@ namespace WebPP {
         uint16_t _code;
         std::string _mime_type;
 
-        t_insensitive_http_headers *headers;
+        t_insensitive_http_headers *headers = {};
+        static t_insensitive_http_headers default_headers;
 
         public:
         void set_mimetype(const std::string &mime_type);
@@ -37,7 +38,7 @@ namespace WebPP {
          * @return
          */
         Response(t_template body, uint16_t response_code = 200,
-                 std::string mimetype = "text/html", t_insensitive_http_headers *headers = {});
+                 std::string mimetype = "text/html", t_insensitive_http_headers *headers = &default_headers);
 
         void generate_raw_headers(std::ostringstream &string_stream);
         void generate_raw_body(std::string &buffer);

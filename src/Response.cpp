@@ -5,6 +5,7 @@
 #include <sstream>
 #include "Response.h"
 
+WebPP::t_insensitive_http_headers WebPP::Response::default_headers = {};
 
 WebPP::Response::Response(t_template body, uint16_t response_code,
                           std::string mimetype, t_insensitive_http_headers *headers)
