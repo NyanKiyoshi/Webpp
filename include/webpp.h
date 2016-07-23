@@ -5,6 +5,7 @@
 #include <map>
 #include <fcgio.h>
 #include <stdlib.h>
+#include <set>
 #include "Logger.h"
 #include "Response.h"
 #include "RequestHandler.h"
@@ -87,14 +88,13 @@ namespace WebPP {
               const int THREAD_COUNT=DEFAULT_THREAD_COUNT);
 
         void run();     // uses fastcgi and wait for requests
-        void serve();   // TODO: serves a HTTPServer and wait for requests
 
         // TODO: set headers from route or HEADERS({...})
         // TODO: map regexp routes
         // TODO: get options as dict
         // register routes
-        void route(char *url,    void (*fn)(...), insensitive_http_headers_t *headers = {});
-        void route(char *urls[], void (*fn)(...), insensitive_http_headers_t *headers = {});  // array of "char *url"
+        void add_route(char *url,   void (*fn)(...), std::set<const char *> allowed_methods = {"GET"}, insensitive_http_headers_t *headers = {});
+        void add_route(char **urls, void (*fn)(...), std::set<const char *> allowed_methods = {"GET"}, insensitive_http_headers_t *headers = {});  // array of "char *url"
 
         // register extensions
             // will call init() ... blblbl
@@ -102,11 +102,25 @@ namespace WebPP {
         // register a before request
         void before_request(before_request_function_t fn);
 
+        /**
+         * Call every registered `before_request` after having generated the Request object and before calling
+         * the associated route.
+         * @param request
+         */
+        void preprocess_request(Request request);
+
         // register a after request
-        void after_request(after_request_function_t fn);
+        void after_request(after_request_function_t fn /* TODO: should receive a Response parameter */);
+
+        /**
+         * Call every registered `after_request` after having called the view and rendered the Response just
+         * before sending the generated response.
+         */
+        void process_response(/* Response */);
 
         // register a blueprint
         // FIXME: let's decide if the blueprint must be a const of the Blueprint instance
+        // blueprint.register will be called to register everything
         void register_blueprint(Blueprint *bp);
         void register_blueprint(Blueprint *bp,
                                 const char *static_folder, const char *static_url_path,
