@@ -3,14 +3,14 @@
 #include "webpp.h"
 
 
-WebPP::Webpp::Webpp() {
+WebPP::Webpp::Webpp(const int THREAD_COUNT) : THREAD_COUNT(THREAD_COUNT) {
 
 }
 
-WebPP::Webpp::Webpp(const char *static_folder, const char *static_url_path, const char *template_folder) {
-    this->static_folder = static_folder;
-    this->static_url_path = static_url_path;
-    this->template_folder = template_folder;
+WebPP::Webpp::Webpp(const char *static_folder, const char *static_url_path, const char *template_folder,
+                    const int THREAD_COUNT
+) : static_folder(static_folder), static_url_path(static_url_path), template_folder(template_folder),
+    THREAD_COUNT(THREAD_COUNT) {
 }
 
 const char *WebPP::Webpp::get_static_folder() {
@@ -56,22 +56,22 @@ void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp,
 }
 
 void WebPP::Webpp::run() {
-    // XXX: we should check if in multithread it still works
-    // XXX: because `this->request` is in a precise RAM address unlike a local:request in run()!
-    // ---
     // XXX: we should be able from anywhere to write to the cerr buffer
 
-    FCGX_Init();
-    FCGX_InitRequest(&(this->request), 0, 0);
+    FCGX_Request request;
 
-    while (FCGX_Accept_r(&(this->request)) == 0) {
-        insensitive_http_headers_t h = {{"Content-type", "Null."}, {"X-test", "X-done"}, {"X-Test", "X-doxxne"}};  // REMOVE-ME
-        Response resp = Response((char *)"TPL/BODY\n", 200, "text/html", &h);         // REMOVE-ME
-        this->write_to_fastcgi(&resp);
+    FCGX_Init();
+    FCGX_InitRequest(&request, 0, 0);
+
+    while (FCGX_Accept_r(&request) == 0) {
+        insensitive_http_headers_t h = {{"Content-type", "Null."}, {"X-test", "X-done"}};  // REMOVE-ME
+        Response resp = Response(*request.envp, 200, "text/html", &h);                     // REMOVE-ME
+
+        this->write_to_fastcgi(request, &resp);
     }
 }
 
-inline void WebPP::Webpp::start_wrtting_to_fastcgi_buffers() {
+inline void WebPP::Webpp::start_wrtting_to_fastcgi_buffers(FCGX_Request request) {
     fcgi_streambuf cin_fcgi_streambuf(request.in);
     fcgi_streambuf cout_fcgi_streambuf(request.out);
     fcgi_streambuf cerr_fcgi_streambuf(request.err);
@@ -82,10 +82,10 @@ inline void WebPP::Webpp::start_wrtting_to_fastcgi_buffers() {
     std::cerr.rdbuf(&cerr_fcgi_streambuf);
 }
 
-inline void WebPP::Webpp::write_to_fastcgi(Response *response) {
-    fcgi_streambuf cin_fcgi_streambuf(this->request.in);
-    fcgi_streambuf cout_fcgi_streambuf(this->request.out);
-    fcgi_streambuf cerr_fcgi_streambuf(this->request.err);
+inline void WebPP::Webpp::write_to_fastcgi(FCGX_Request &request, Response *response) {
+    fcgi_streambuf cin_fcgi_streambuf(request.in);
+    fcgi_streambuf cout_fcgi_streambuf(request.out);
+    fcgi_streambuf cerr_fcgi_streambuf(request.err);
     // start_wrtting_to_fastcgi_buffers ^ ^ ^
 
     std::cin.rdbuf(&cin_fcgi_streambuf);
@@ -98,6 +98,14 @@ inline void WebPP::Webpp::write_to_fastcgi(Response *response) {
 //    this->start_wrtting_to_fastcgi_buffers();
 
     std::cout << buffer;
+
+    char *clenstr = FCGX_GetParam("HTTP_USER_AGENT", request.envp);
+    std::cout << clenstr;
+
+//    char *content;
+//    long clen = gstdin(&request, &content);
+//
+//    std::cout << content;
 
     this->stop_wrtting_to_fastcgi_buffers();
 }
