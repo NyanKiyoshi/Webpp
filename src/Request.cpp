@@ -3,6 +3,7 @@
 //
 
 #include <cstring>
+#include <iostream>
 #include "Request.h"
 
 
@@ -14,7 +15,7 @@ char* WebPP::Request::get_header(const char* header_name) {
     size_t header_length = strlen(header_name);
     char new_header_name[this->PREFIX_LENGTH + header_length];
 
-    strcat(new_header_name, this->ENV_HEADER_PREFIX);
+    strcpy(new_header_name, this->ENV_HEADER_PREFIX);
     strcat(new_header_name, header_name);
 
     return FCGX_GetParam(new_header_name, this->REQUEST.envp);
