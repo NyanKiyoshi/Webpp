@@ -37,8 +37,8 @@ void WebPP::Response::render(std::string &buffer) {
     this->generate_raw_headers(headers);
     this->generate_raw_body(body);
 
-    buffer += headers.str();
-    buffer += "\r\n";   // Don't remove (RFC2616 section 6)
+    buffer += headers.str();  // Copy the raw headers string buffer to the render buffer
+    buffer += "\r\n";         // Separation between the HTTP header and message-body (RFC2616 section 6)
     buffer += body;
 }
 

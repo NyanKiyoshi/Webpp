@@ -47,7 +47,7 @@ namespace WebPP {
         // will be used to render the response and will return the content
         virtual void render(std::string&);
 
-        Response();
+        protected: Response();
     };
 }
 
