@@ -5,8 +5,9 @@
 #include <cstring>
 #include "Request.h"
 
-
-WebPP::Request::Request(FCGX_Request &request) : _REQUEST(request) {
+WebPP::Request::Request(FCGX_Request &request) : _REQUEST(request),
+                                                 USER_AGENT(_get_from_env("HTTP_USER_AGENT")),
+                                                 REQUEST_METHOD(_get_from_env("HTTP_REQUEST_METHOD")) {
 
 }
 
@@ -27,14 +28,4 @@ char* WebPP::Request::get_header(const char* header_name) {
 
 inline char* WebPP::Request::_get_from_env(const char *name) {
     return FCGX_GetParam(name, this->_REQUEST.envp);
-}
-
-char* WebPP::Request::request_method() {
-    static char* header = this->_get_from_env("HTTP_REQUEST_METHOD");
-    return header;
-}
-
-char* WebPP::Request::user_agent() {
-    static char* header = this->_get_from_env("HTTP_USER_AGENT");
-    return header;
 }

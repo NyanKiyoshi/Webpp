@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <ResponseFromTemplate.h>
 #include <Request.h>
+#include <HTTPException.h>
 #include "webpp.h"
 
 
@@ -44,7 +45,7 @@ void WebPP::Webpp::after_request(t_after_request_function fn) {
 
 void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp) {
     assert(this->_blueprints.count(bp->get_name()) < 1 && "A Blueprint has already been registered under this name.");
-    this->_blueprints[bp->name] = bp;
+    this->_blueprints[bp->NAME] = bp;
 }
 
 void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp,
@@ -56,6 +57,24 @@ void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp,
     //    Because someone should add rules in our app to allow to easily go through the subdomains and urls.
 }
 
+void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
+    t_insensitive_http_headers h = {{"Content-type", "Null."}, {"X-test", "X-done"}};  // REMOVE-ME
+    Response resp = Response(*fcgx_request.envp, 200, "text/plain", &h);               // REMOVE-ME
+    Request rq = Request(fcgx_request);
+
+    try {
+        // TODO: generate request object
+        // TODO: search for endpoint
+        // TODO: call view
+        // TODO: make_response
+    } catch (HTTPException) {
+        // TODO: make_response(ERROR_OBJ)
+    }
+    // TODO: write_resp() / return Response obj
+
+    this->_write_to_fastcgi(fcgx_request, &resp, *fcgx_request.envp, &rq);
+}
+
 void WebPP::Webpp::run() {
     // XXX: we should be able from anywhere to write to the cerr buffer
     FCGX_Request fcgx_request;
@@ -64,16 +83,20 @@ void WebPP::Webpp::run() {
     FCGX_InitRequest(&fcgx_request, 0, 0);
 
     while (FCGX_Accept_r(&fcgx_request) == 0) {
-        t_insensitive_http_headers h = {{"Content-type", "Null."}, {"X-test", "X-done"}};  // REMOVE-ME
-        Response resp = Response(*fcgx_request.envp, 200, "text/html", &h);                // REMOVE-ME
+        // BEGIN -- START
+        fcgi_streambuf cin_fcgi_streambuf(fcgx_request.in);
+        fcgi_streambuf cout_fcgi_streambuf(fcgx_request.out);
+        fcgi_streambuf cerr_fcgi_streambuf(fcgx_request.err);
+        // _start_wrtting_to_fastcgi_buffers ^ ^ ^
 
-        // TODO: generate request object
-        // TODO: search for endpoint
-        // TODO: call view
-        // TODO: make_response
+        std::cin.rdbuf(&cin_fcgi_streambuf);
+        std::cout.rdbuf(&cout_fcgi_streambuf);
+        std::cerr.rdbuf(&cerr_fcgi_streambuf);
+        // END -- START
 
-        this->_write_to_fastcgi(fcgx_request, &resp);
+        this->_process_request(fcgx_request);
     }
+    this->_stop_wrtting_to_fastcgi_buffers();
 }
 
 // XXX: this method doesn't work (null pointers)
@@ -88,27 +111,14 @@ inline void WebPP::Webpp::_start_wrtting_to_fastcgi_buffers(FCGX_Request request
     std::cerr.rdbuf(&cerr_fcgi_streambuf);
 }
 
-inline void WebPP::Webpp::_write_to_fastcgi(FCGX_Request &request, Response *response) {
-    fcgi_streambuf cin_fcgi_streambuf(request.in);
-    fcgi_streambuf cout_fcgi_streambuf(request.out);
-    fcgi_streambuf cerr_fcgi_streambuf(request.err);
-    // _start_wrtting_to_fastcgi_buffers ^ ^ ^
-
-    std::cin.rdbuf(&cin_fcgi_streambuf);
-    std::cout.rdbuf(&cout_fcgi_streambuf);
-    std::cerr.rdbuf(&cerr_fcgi_streambuf);
+inline void
+WebPP::Webpp::_write_to_fastcgi(FCGX_Request &fcgx_request, Response *response, char *envp, Request *request) {
 
     std::string buffer;
     response->render(buffer);
 
     std::cout << buffer;
-
-    // REMOVE-ME
-    Request rq = Request(request);
-
-    // REMOVE-ME
-    std::cout << rq.user_agent();
-
+    std::cout << request->USER_AGENT;
     this->_stop_wrtting_to_fastcgi_buffers();
 }
 

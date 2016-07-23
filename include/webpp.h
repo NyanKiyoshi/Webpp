@@ -68,8 +68,10 @@ namespace WebPP {
         std::streambuf *_cout_streambuf = std::cout.rdbuf();
         std::streambuf *_cerr_streambuf = std::cerr.rdbuf();
 
+        void _process_request(FCGX_Request fcgx_request);
+
         inline void _start_wrtting_to_fastcgi_buffers(FCGX_Request request);
-        inline void _write_to_fastcgi(FCGX_Request &request, Response *response);
+        inline void _write_to_fastcgi(FCGX_Request &fcgx_request, Response *response, char *envp, Request *request);
         inline void _stop_wrtting_to_fastcgi_buffers();  // restores IO stream buffers
 
         // TODO: config

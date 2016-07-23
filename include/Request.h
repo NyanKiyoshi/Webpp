@@ -25,16 +25,16 @@ namespace WebPP {
         void _find_associated_route();
 
         public:
+        const char *USER_AGENT;
+        const char *REQUEST_METHOD;
         Request(FCGX_Request &request);
 
         char* get_header(const char* header_name);
 
         // The following methods are using static member functions to only extract one time the headers.
         // And only if they are asked for it.
-        char* request_method();
         char* raw_query_string();
         char* raw_cookies();
-        char* user_agent();
         char* host();
     };
 }
