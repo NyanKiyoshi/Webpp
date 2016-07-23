@@ -17,20 +17,18 @@ namespace WebPP {
      */
     class Response {
         private:
-        template_t body;
-        uint16_t code;
-        std::string mime_type;
+        t_template _body;
+        uint16_t _code;
+        std::string _mime_type;
+
+        t_insensitive_http_headers *headers;
 
         public:
         void set_mimetype(const std::string &mime_type);
 
-        private:
-        insensitive_http_headers_t *headers;
-        public:
-        insensitive_http_headers_t *get_headers() const;
+        t_insensitive_http_headers *get_headers() const;
         // will be updated by WebPP if HEADER({...}) was set
 
-        public:
         /**
          * @param body
          * @param response_code
@@ -38,8 +36,8 @@ namespace WebPP {
          * @param headers Those headers are case insentive.
          * @return
          */
-        Response(template_t body, uint16_t response_code = 200,
-                 std::string mimetype = "text/html", insensitive_http_headers_t *headers = {});
+        Response(t_template body, uint16_t response_code = 200,
+                 std::string mimetype = "text/html", t_insensitive_http_headers *headers = {});
 
         void generate_raw_headers(std::ostringstream &string_stream);
         void generate_raw_body(std::string &buffer);

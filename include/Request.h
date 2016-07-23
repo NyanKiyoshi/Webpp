@@ -16,19 +16,21 @@ namespace WebPP {
      */
     class Request {
         private:
-        const char* ENV_HEADER_PREFIX = "HTTP_";
-        const size_t PREFIX_LENGTH = strlen(ENV_HEADER_PREFIX);
+        const char* _ENV_HEADER_PREFIX = "HTTP_";
+        const size_t _PREFIX_LENGTH = strlen(_ENV_HEADER_PREFIX);
 
-        const FCGX_Request &REQUEST;
+        const FCGX_Request &_REQUEST;
 
-        inline char* get_from_env(const char *name);
-        void find_associated_route();
+        inline char* _get_from_env(const char *name);
+        void _find_associated_route();
 
         public:
         Request(FCGX_Request &request);
 
         char* get_header(const char* header_name);
 
+        // The following methods are using static member functions to only extract one time the headers.
+        // And only if they are asked for it.
         char* request_method();
         char* raw_query_string();
         char* raw_cookies();

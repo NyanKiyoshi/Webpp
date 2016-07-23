@@ -36,7 +36,7 @@ namespace WebPP {
     typedef void (*t_after_request_function)(Request, Response);
 
     // Blueprints
-    typedef std::string str_blueprint_name_t;
+    typedef std::string t_str_blueprint_name;
 
     static const unsigned long STDIN_MAX = 1000000;
 
@@ -47,30 +47,30 @@ namespace WebPP {
     class Webpp {
         private:
         // See https://web.archive.org/web/20110815203321/http://www.fastcgi.com/drupal/node/6?q=node/22#S4
-        const int THREAD_COUNT;
+        const int _THREAD_COUNT;
 
         // Static folder
-        const char *static_folder;
-        const char *static_url_path;
+        const char *_STATIC_FOLDER;
+        const char *_STATIC_URL_PATH;
 
         // Templates
-        const char *template_folder;
+        const char *_TEMPLATE_FOLDER;
 
         // List of registered blueprints
         // <instance name, instance>
-        std::map<const str_blueprint_name_t, Blueprint*> blueprints = {};
+        std::map<const t_str_blueprint_name, Blueprint*> _blueprints = {};
 
         // Logger
-        Logger logger;
+        Logger _logger;
 
 
-        std::streambuf *cin_streambuf = std::cin.rdbuf();
-        std::streambuf *cout_streambuf = std::cout.rdbuf();
-        std::streambuf *cerr_streambuf = std::cerr.rdbuf();
+        std::streambuf *_cin_streambuf = std::cin.rdbuf();
+        std::streambuf *_cout_streambuf = std::cout.rdbuf();
+        std::streambuf *_cerr_streambuf = std::cerr.rdbuf();
 
-        inline void start_wrtting_to_fastcgi_buffers(FCGX_Request request);
-        inline void write_to_fastcgi(FCGX_Request &request, Response *response);
-        inline void stop_wrtting_to_fastcgi_buffers();  // restores IO stream buffers
+        inline void _start_wrtting_to_fastcgi_buffers(FCGX_Request request);
+        inline void _write_to_fastcgi(FCGX_Request &request, Response *response);
+        inline void _stop_wrtting_to_fastcgi_buffers();  // restores IO stream buffers
 
         // TODO: config
         // TODO: views
@@ -93,8 +93,8 @@ namespace WebPP {
         // TODO: map regexp routes
         // TODO: get options as dict
         // register routes
-        void add_route(char *url,   void (*fn)(...), std::set<const char *> allowed_methods = {"GET"}, insensitive_http_headers_t *headers = {});
-        void add_route(char **urls, void (*fn)(...), std::set<const char *> allowed_methods = {"GET"}, insensitive_http_headers_t *headers = {});  // array of "char *url"
+        void add_route(char *url,   void (*fn)(...), std::set<const char *> allowed_methods = {"GET"}, t_insensitive_http_headers *headers = {});
+        void add_route(char **urls, void (*fn)(...), std::set<const char *> allowed_methods = {"GET"}, t_insensitive_http_headers *headers = {});  // array of "char *url"
 
         // register extensions
             // will call init() ... blblbl

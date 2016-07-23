@@ -6,18 +6,18 @@
 #include "Response.h"
 
 
-WebPP::Response::Response(template_t body, uint16_t response_code,
-                          std::string mimetype, insensitive_http_headers_t *headers)
-        : body(body), code(response_code), mime_type(mimetype), headers(headers) {
+WebPP::Response::Response(t_template body, uint16_t response_code,
+                          std::string mimetype, t_insensitive_http_headers *headers)
+        : _body(body), _code(response_code), _mime_type(mimetype), headers(headers) {
 
 }
 
 void WebPP::Response::generate_raw_headers(std::ostringstream &string_stream) {
     // Copy the headers before modifying them
-    insensitive_http_headers_t temp_headers = *(this->headers);
+    t_insensitive_http_headers temp_headers = *(this->headers);
 
     // override the content-type header
-    temp_headers["Content-type"] = mime_type;
+    temp_headers["Content-type"] = _mime_type;
 
     // loop through the headers
     // append header and add a CRLF ending according to the RFC2616
@@ -27,7 +27,7 @@ void WebPP::Response::generate_raw_headers(std::ostringstream &string_stream) {
 }
 
 void WebPP::Response::generate_raw_body(std::string &buffer) {
-    buffer += this->body;  // TODO: parse
+    buffer += this->_body;  // TODO: parse
 }
 
 void WebPP::Response::render(std::string &buffer) {
@@ -45,9 +45,9 @@ void WebPP::Response::render(std::string &buffer) {
 WebPP::Response::Response() {}
 
 void WebPP::Response::set_mimetype(const std::string &mime_type) {
-    Response::mime_type = mime_type;
+    Response::_mime_type = mime_type;
 }
 
-WebPP::insensitive_http_headers_t *WebPP::Response::get_headers() const {
+WebPP::t_insensitive_http_headers *WebPP::Response::get_headers() const {
     return headers;
 }

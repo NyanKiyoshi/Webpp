@@ -15,11 +15,11 @@ namespace WebPP {
      */
     class ResponseFromTemplate : public Response {
         private:
-        template_t path;
-        uint16_t response_code;
+        t_template _path;
+        uint16_t _response_code;
 
         public:
-        ResponseFromTemplate(template_t path, uint16_t response_code = 200, insensitive_http_headers_t *headers = {});
+        ResponseFromTemplate(t_template path, uint16_t response_code = 200, t_insensitive_http_headers *headers = {});
         void render(std::string &buffer);
     };
 }

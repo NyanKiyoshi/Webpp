@@ -1,0 +1,15 @@
+GET http://cgi.local/
+X-TEST: expect_me
+
+ -- response --
+200 OK
+Server:  nginx/1.10.1
+Date:  Sat, 23 Jul 2016 17:56:49 GMT
+Content-Type:  text/html
+Transfer-Encoding:  chunked
+Connection:  keep-alive
+X-test:  X-done
+Content-Encoding:  gzip
+
+USING: rq.get_header("X_TEST");
+RESULT: expect_me
