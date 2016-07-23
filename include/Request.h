@@ -21,14 +21,15 @@ namespace WebPP {
 
         const FCGX_Request &_REQUEST;
 
-        inline char* _get_from_env(const char *name);
+        inline const char* get_request_method();
         void _find_associated_route();
 
         public:
         const char *USER_AGENT;
-        const char *REQUEST_METHOD;
+        const char* REQUEST_METHOD;
         Request(FCGX_Request &request);
 
+        inline char* get_from_env(const char *name);
         char* get_header(const char* header_name);
 
         // The following methods are using static member functions to only extract one time the headers.

@@ -58,8 +58,7 @@ void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp,
 }
 
 void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
-    t_insensitive_http_headers h = {{"Content-type", "Null."}, {"X-test", "X-done"}};  // REMOVE-ME
-    Response resp = Response(*fcgx_request.envp, 200, "text/plain", &h);               // REMOVE-ME
+    Response resp = Response("", 200, "text/plain");               // REMOVE-ME
     Request rq = Request(fcgx_request);
 
     try {
@@ -72,7 +71,7 @@ void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
     }
     // TODO: write_resp() / return Response obj
 
-    this->_write_to_fastcgi(fcgx_request, &resp, *fcgx_request.envp, &rq);
+    this->_write_to_fastcgi(fcgx_request, &resp, &rq);
 }
 
 void WebPP::Webpp::run() {
@@ -112,13 +111,14 @@ inline void WebPP::Webpp::_start_wrtting_to_fastcgi_buffers(FCGX_Request request
 }
 
 inline void
-WebPP::Webpp::_write_to_fastcgi(FCGX_Request &fcgx_request, Response *response, char *envp, Request *request) {
-
+WebPP::Webpp::_write_to_fastcgi(FCGX_Request &fcgx_request, Response *response, Request *request) {
     std::string buffer;
     response->render(buffer);
 
     std::cout << buffer;
-    std::cout << request->USER_AGENT;
+
+    this->_debug_print_environment(fcgx_request.envp);
+
     this->_stop_wrtting_to_fastcgi_buffers();
 }
 
@@ -126,4 +126,10 @@ inline void WebPP::Webpp::_stop_wrtting_to_fastcgi_buffers() {
     std::cin.rdbuf(this->_cin_streambuf);
     std::cout.rdbuf(this->_cout_streambuf);
     std::cerr.rdbuf(this->_cerr_streambuf);
+}
+
+void WebPP::Webpp::_debug_print_environment(char **environment) {
+    for (int i = 0; environment[i] != NULL; i++) {
+        std::cout << environment[i] << "\n";
+    }
 }

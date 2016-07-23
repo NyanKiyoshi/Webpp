@@ -15,17 +15,6 @@
 #define DEFAULT_THREAD_COUNT 20
 
 
-#define HTTP_GET          1  // Information is appended onto the end of the request URI being requested
-#define HTTP_POST         2  // Transmits all data immediately after the request URI.
-#define HTTP_HEAD         3  // Headers of a GET request - Information about a document
-#define HTTP_PUT          4  // The URI in a PUT request identifies the entity enclosed with the request.
-#define HTTP_DELETE       5  // delete the resource identified by the Request-URI
-#define HTTP_OPTIONS      6  // enum supported Methods
-#define HTTP_TRACE        7  // enum each node along the path
-#define HTTP_CONNECT      8  // Request web proxy dynamically switch to a secure IP-based connection (an SSL tunnel)
-#define HTTP_UNKNOWN      9  // None of the Above
-
-
 // TODO: send files
 // TODO: we should be able to register classes as bp
 
@@ -71,8 +60,9 @@ namespace WebPP {
         void _process_request(FCGX_Request fcgx_request);
 
         inline void _start_wrtting_to_fastcgi_buffers(FCGX_Request request);
-        inline void _write_to_fastcgi(FCGX_Request &fcgx_request, Response *response, char *envp, Request *request);
+        inline void _write_to_fastcgi(FCGX_Request &fcgx_request, Response *response, Request *request);
         inline void _stop_wrtting_to_fastcgi_buffers();  // restores IO stream buffers
+        inline void _debug_print_environment(char **environment);
 
         // TODO: config
         // TODO: views

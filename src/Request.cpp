@@ -3,12 +3,12 @@
 //
 
 #include <cstring>
+#include <iostream>
 #include "Request.h"
 
 WebPP::Request::Request(FCGX_Request &request) : _REQUEST(request),
-                                                 USER_AGENT(_get_from_env("HTTP_USER_AGENT")),
-                                                 REQUEST_METHOD(_get_from_env("HTTP_REQUEST_METHOD")) {
-
+                                                 USER_AGENT(get_from_env("HTTP_USER_AGENT")),
+                                                 REQUEST_METHOD(this->get_request_method()) {
 }
 
 /**
@@ -26,6 +26,11 @@ char* WebPP::Request::get_header(const char* header_name) {
     return FCGX_GetParam(new_header_name, this->_REQUEST.envp);
 }
 
-inline char* WebPP::Request::_get_from_env(const char *name) {
+inline char* WebPP::Request::get_from_env(const char *name) {
     return FCGX_GetParam(name, this->_REQUEST.envp);
+}
+
+const char* WebPP::Request::get_request_method() {
+    char *method = get_from_env("REQUEST_METHOD");
+    return (method == NULL) ? "UNKNOWN" : method;
 }
