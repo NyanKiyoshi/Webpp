@@ -26,7 +26,7 @@ namespace WebPP {
 
         // looks if the given path match the entry
         bool match(const char *&path);
-
+        
         private:
         // Arrays of before/after_rq
         t_before_request_function _array_before_request[0];  // use malloc(sizeof(_array_before_request) + N * sizeof(_array_before_request[0]))

@@ -3,6 +3,7 @@
 #include <Request.h>
 #include <HTTPException.h>
 #include "webpp.h"
+#include "utils/string_utils.h"
 
 
 WebPP::Webpp::Webpp(const int THREAD_COUNT) : _THREAD_COUNT(THREAD_COUNT) {
@@ -133,4 +134,9 @@ void WebPP::Webpp::_debug_print_environment(char **environment) {
     for (int i = 0; environment[i] != NULL; i++) {
         std::cout << environment[i] << "\n";
     }
+}
+
+void WebPP::Webpp::create_rule(const std::string &rule) {
+    std::vector<std::string> tokens;
+    split(rule, tokens, "/");
 }

@@ -1,6 +1,7 @@
 #ifndef WEBPP_WEBPP_H
 #define WEBPP_WEBPP_H
 
+#include <vector>
 #include <iostream>
 #include <map>
 #include <fcgio.h>
@@ -63,6 +64,8 @@ namespace WebPP {
         inline void _write_to_fastcgi(FCGX_Request &fcgx_request, Response *response, Request *request);
         inline void _stop_wrtting_to_fastcgi_buffers();  // restores IO stream buffers
         inline void _debug_print_environment(char **environment);
+
+        void create_rule(const std::string &rule);
 
         // TODO: config
         // TODO: views -> registrations from add_route(...) and blueprint.add_route(...). Will be functions to call
