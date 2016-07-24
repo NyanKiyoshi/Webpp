@@ -6,7 +6,7 @@ FILE(GLOB HEADERS_LIST  "./include/*.h"  "./include/*/*.h")
 
 
 # -O2 -> optimisation level 2 see https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
-list(APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} -g -ftest-coverage -O2 -fprofile-arcs -lfcgi++ -lfcgi -Wl,-Map,dump.map")
+list(APPEND CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} -g -ftest-coverage -O2 -fprofile-arcs -lfcgi++ -lfcgi -Wl,-Map,${PROJECT_NAME}_dump.map")
 
 include_directories("./include/")
 add_library(${PROJECT_NAME} ${SRC_LIST} ${HEADERS_LIST})

@@ -34,3 +34,18 @@ const char* WebPP::Request::get_request_method() {
     char *method = get_from_env("REQUEST_METHOD");
     return (method == NULL) ? "UNKNOWN" : method;
 }
+
+void WebPP::Request::_find_associated_route() {
+    // MAP => {"Method": [ views, ... ]}
+
+    // get DOCUMENT_URI
+    // get QUERY_STRING -> parse
+    // GET method or set to default
+
+    // Match subdomain (subdomains must be in bp?)
+
+    // for (const auto& rule : rules):
+        // match rule
+        // if slash missing -> Redirect (301)
+    // Nothing found -> 404
+}
