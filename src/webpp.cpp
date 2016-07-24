@@ -58,7 +58,8 @@ void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp,
 }
 
 void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
-    Response resp = Response("", 200, "text/plain");               // REMOVE-ME
+    t_insensitive_http_headers h = {{"X-test", "X-done"}};  // REMOVE-ME
+    Response resp = Response(static_cast<char*>("It's working!\n=============\n"), 200, "text/plain", &h);    // REMOVE-ME
     Request rq = Request(fcgx_request);
 
     try {

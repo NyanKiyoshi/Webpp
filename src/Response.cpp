@@ -5,8 +5,12 @@
 #include <sstream>
 #include "Response.h"
 
+#define CLRF "\r\n"
+
 WebPP::t_insensitive_http_headers WebPP::Response::default_headers = {};
 
+
+// TODO: handle response code
 WebPP::Response::Response(t_template body, uint16_t response_code,
                           std::string mimetype, t_insensitive_http_headers *headers)
         : _body(body), _code(response_code), _mime_type(mimetype), headers(headers) {
@@ -23,7 +27,7 @@ void WebPP::Response::generate_raw_headers(std::ostringstream &string_stream) {
     // loop through the headers
     // append header and add a CRLF ending according to the RFC2616
     for (const auto& header : temp_headers) {
-        string_stream << header.first << ":" << header.second << "\r\n";
+        string_stream << header.first << ":" << header.second << CLRF;
     }
 }
 
@@ -39,7 +43,7 @@ void WebPP::Response::render(std::string &buffer) {
     this->generate_raw_body(body);
 
     buffer += headers.str();  // Copy the raw headers string buffer to the render buffer
-    buffer += "\r\n";         // Separation between the HTTP header and message-body (RFC2616 section 6)
+    buffer += CLRF;           // Separation between the HTTP header and message-body (RFC2616 section 6)
     buffer += body;
 }
 

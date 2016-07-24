@@ -26,11 +26,13 @@ namespace WebPP {
 
         public:
         const char *USER_AGENT;
-        const char* REQUEST_METHOD;
+        const char *REQUEST_METHOD;
         Request(FCGX_Request &request);
 
         inline char* get_from_env(const char *name);
         char* get_header(const char* header_name);
+
+        // is_https = strcmp(REQUEST_SCHEME, "https") ? true : false
 
         // The following methods are using static member functions to only extract one time the headers.
         // And only if they are asked for it.

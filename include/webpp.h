@@ -27,7 +27,7 @@ namespace WebPP {
     // Blueprints
     typedef std::string t_str_blueprint_name;
 
-    static const unsigned long STDIN_MAX = 1000000;
+    static const unsigned long STDIN_MAX = 1000000;  // TODO: load from config
 
 
     /**
@@ -65,7 +65,7 @@ namespace WebPP {
         inline void _debug_print_environment(char **environment);
 
         // TODO: config
-        // TODO: views
+        // TODO: views -> registrations from add_route(...) and blueprint.add_route(...). Will be functions to call
         // TODO: before requests
         // TODO: after requests
         // TODO: blueprints
@@ -91,6 +91,9 @@ namespace WebPP {
         // register extensions
             // will call init() ... blblbl
 
+        // register a function to call before starting to process the newly received request
+        void before_processing_request(void *before_processing_request());
+
         // register a before request
         void before_request(t_before_request_function fn);
 
@@ -109,6 +112,9 @@ namespace WebPP {
          * before sending the generated response.
          */
         void process_response(Request request, Response response);
+
+        // register a function to call after having to processed everything (called after the after_request())
+        void after_processing_request(void *before_processing_request());
 
         // register a blueprint
         // FIXME: let's decide if the blueprint must be a const of the Blueprint instance
