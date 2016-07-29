@@ -111,7 +111,7 @@ namespace WebPP {
         void after_request(t_after_request_function fn);
 
         /**
-         * Call every registered `after_request` after having called the view and rendered the Response just
+         * Call every registered `after_request` after having called the view and rendered the Response right
          * before sending the generated response.
          */
         void process_response(Request request, Response response);

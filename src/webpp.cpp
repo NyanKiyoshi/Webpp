@@ -59,18 +59,17 @@ void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp,
 }
 
 void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
-    // TODO: call before before
-
     t_insensitive_http_headers h = {{"X-test", "X-done"}};  // REMOVE-ME
     Response resp = Response(static_cast<char*>("It's working!\n=============\n"), 200, "text/plain", &h);    // REMOVE-ME
     Request rq = Request(fcgx_request);
 
     try {
+        // TODO: call before_processing_request
         // TODO: generate request object
         // TODO: search for endpoint
-        // TODO: call before
+        // TODO: call preprocess_request
         // TODO: call view
-        // TODO: call after
+        // TODO: call process_response
         // TODO: make_response
     } catch (HTTPException) {
         // TODO: make_response(ERROR_OBJ)
@@ -79,7 +78,9 @@ void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
 
     this->_write_to_fastcgi(fcgx_request, &resp, &rq);
 
-    // TODO: call after after
+    // XXX: it probably slowdown the request process because fcgi only flush after being called
+    // XXX: we should find a way to do this after having sent the response.
+    // TODO: call after_processing_request
 }
 
 void WebPP::Webpp::run() {
@@ -101,7 +102,10 @@ void WebPP::Webpp::run() {
         std::cerr.rdbuf(&cerr_fcgi_streambuf);
         // END -- START
 
-        this->_process_request(fcgx_request);
+        // try:
+            this->_process_request(fcgx_request);
+        // except:
+            // do_nothing, it should be afterafter()
     }
     this->_stop_wrtting_to_fastcgi_buffers();
 }
