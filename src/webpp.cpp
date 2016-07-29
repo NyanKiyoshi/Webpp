@@ -59,6 +59,8 @@ void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp,
 }
 
 void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
+    // TODO: call before before
+
     t_insensitive_http_headers h = {{"X-test", "X-done"}};  // REMOVE-ME
     Response resp = Response(static_cast<char*>("It's working!\n=============\n"), 200, "text/plain", &h);    // REMOVE-ME
     Request rq = Request(fcgx_request);
@@ -66,7 +68,9 @@ void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
     try {
         // TODO: generate request object
         // TODO: search for endpoint
+        // TODO: call before
         // TODO: call view
+        // TODO: call after
         // TODO: make_response
     } catch (HTTPException) {
         // TODO: make_response(ERROR_OBJ)
@@ -74,6 +78,8 @@ void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
     // TODO: write_resp() / return Response obj
 
     this->_write_to_fastcgi(fcgx_request, &resp, &rq);
+
+    // TODO: call after after
 }
 
 void WebPP::Webpp::run() {
