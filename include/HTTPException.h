@@ -15,12 +15,14 @@ namespace WebPP {
      * Base descriptor of a HTTPException allow to throw some HTTP errors during the request processing.
      * The HTTPException and its children will be handled by the application and render a error on the client's browser.
      */
-    class HTTPException : public std::exception {
+    class HTTPException {
         private:
         const int _CODE;
-        const int _DESCRIPTION;
+        const char* _DESCRIPTION;
 
         public:
+        HTTPException(const int code, const char* descr) : _CODE(code), _DESCRIPTION(descr) {};
+
         /*
          * A blueprint could easily handle a HTTPException and for example generate a JSON response instead of
          * a HTML one. Or anything else without necessarily change/ inherit the HTTPException class.
@@ -33,14 +35,23 @@ namespace WebPP {
             return this->_CODE;
         }
 
-        int get_description() const {
+        const char* get_description() const {
+            return this->_DESCRIPTION;
+        }
+
+        Response render() {
+            return Response((char*)this->_DESCRIPTION, this->_CODE);
+        }
+
+        char const* what() const throw () {
             return this->_DESCRIPTION;
         }
     };
 
 
     class BadRequest : public HTTPException {
-        int _CODE = 400;
+        public:
+        BadRequest() : HTTPException(400, "Bad Request") {}
     };
 
 
@@ -52,138 +63,159 @@ namespace WebPP {
     };
 
 
-    class BadHost : public BadRequest {
-        int _CODE = 401;
-    };
-
-
     class Unauthorized : public HTTPException {
-        int _CODE = 401;
+        public:
+        Unauthorized() : HTTPException(401, "Unauthorized") {}
     };
 
 
     class Forbidden : public HTTPException {
-        int _CODE = 403;
+        public:
+        Forbidden() : HTTPException(403, "Forbidden") {}
     };
 
 
     class NotFound : public HTTPException {
-        int _CODE = 404;
+        public:
+        NotFound() : HTTPException(404, "Not Found") {}
     };
 
 
     class MethodNotAllowed : public HTTPException {
-        int _CODE = 405;
+        public:
+        MethodNotAllowed() : HTTPException(405, ""){}
     };
 
 
     class NotAcceptable : public HTTPException {
-        int _CODE = 406;
+        public:
+        NotAcceptable() : HTTPException(406, ""){}
     };
 
 
     class RequestTimeout : public HTTPException {
-        int _CODE = 408;
+        public:
+        RequestTimeout() : HTTPException(408, ""){}
     };
 
 
     class Conflict : public HTTPException {
-        int _CODE = 409;
+        public:
+        Conflict() : HTTPException(409, ""){}
     };
 
 
     class Gone : public HTTPException {
-        int _CODE = 410;
+        public:
+        Gone() : HTTPException(410, ""){}
     };
 
 
     class LengthRequired : public HTTPException {
-        int _CODE = 411;
+        public:
+        LengthRequired() : HTTPException(411, ""){}
     };
 
 
     class PreconditionFailed : public HTTPException {
-        int _CODE = 412;
+        public:
+        PreconditionFailed() : HTTPException(412, ""){}
     };
 
 
     class RequestEntityTooLarge : public HTTPException {
-        int _CODE = 413;
+        public:
+        RequestEntityTooLarge() : HTTPException(413, ""){}
     };
 
 
     class RequestURITooLarge : public HTTPException {
-        int _CODE = 414;
+        public:
+        RequestURITooLarge() : HTTPException(414, ""){}
     };
 
 
     class UnsupportedMediaType : public HTTPException {
-        int _CODE = 415;
+        public:
+        UnsupportedMediaType() : HTTPException(415, ""){}
     };
 
 
     class RequestedRangeNotSatisfiable : public HTTPException {
-        int _CODE = 416;
+        public:
+        RequestedRangeNotSatisfiable() : HTTPException(416, ""){}
     };
 
 
     class ExpectationFailed : public HTTPException {
-        int _CODE = 417;
+        public:
+        ExpectationFailed() : HTTPException(417, ""){}
     };
 
 
     class ImATeapot : public HTTPException {
-        int _CODE = 418;
+        public:
+        ImATeapot() : HTTPException(418, ""){}
     };
 
 
     class UnprocessableEntity : public HTTPException {
-        int _CODE = 422;
+        public:
+        UnprocessableEntity() : HTTPException(422, ""){}
     };
 
 
     class PreconditionRequired : public HTTPException {
-        int _CODE = 428;
+        public:
+        PreconditionRequired() : HTTPException(428, ""){}
     };
 
 
     class TooManyRequests : public HTTPException {
-        int _CODE = 429;
+        public:
+        TooManyRequests() : HTTPException(429, ""){}
     };
 
 
     class RequestHeaderFieldsTooLarge : public HTTPException {
-        int _CODE = 431;
+        public:
+        RequestHeaderFieldsTooLarge() : HTTPException(431, ""){}
     };
 
 
     class InternalServerError : public HTTPException {
-        int _CODE = 500;
+        public:
+        InternalServerError() : HTTPException(500, ""){}
     };
 
 
     class NotImplemented : public HTTPException {
-        int _CODE = 501;
+        public:
+        NotImplemented() : HTTPException(501, ""){}
     };
 
 
     class BadGateway : public HTTPException {
-        int _CODE = 502;
+        public:
+        BadGateway() : HTTPException(502, ""){}
     };
 
 
     class ServiceUnavailable : public HTTPException {
-        int _CODE = 503;
+        public:
+        ServiceUnavailable() : HTTPException(503, ""){}
     };
 
 
     class GatewayTimeout : public HTTPException {
-        int _CODE = 504;
+        public:
+        GatewayTimeout() : HTTPException(504, ""){}
     };
 
 
     class HTTPVersionNotSupported : public HTTPException {
-        int _CODE = 505;
+        public:
+        HTTPVersionNotSupported() : HTTPException(505, ""){}
     };
 }
 #endif //WEBPP_HTTPEXCEPTION_H
