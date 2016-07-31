@@ -194,7 +194,7 @@ namespace WebPP {
 
     class InternalServerError : public HTTPException {
         public:
-        InternalServerError() : HTTPException("500", ""){}
+        InternalServerError() : HTTPException("500", "Internal Server Error"){}
     };
 
 
@@ -226,5 +226,7 @@ namespace WebPP {
         public:
         HTTPVersionNotSupported() : HTTPException("505", ""){}
     };
+
+    class CrashMeAndCatchMeIfYouCan : public std::exception {};
 }
 #endif //WEBPP_HTTPEXCEPTION_H

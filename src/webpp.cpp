@@ -2,6 +2,7 @@
 #include <ResponseFromTemplate.h>
 #include <Request.h>
 #include <HTTPException.h>
+#include <exception>
 #include "webpp.h"
 #include "utils/string_utils.h"
 
@@ -87,11 +88,19 @@ void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
         // TODO: call process_response
             // pass (Request rq, Response resp)
         // ---
+        throw WebPP::CrashMeAndCatchMeIfYouCan();  // REMOVE-ME
     }
     // Catch HTTPException or its children
-    catch (HTTPException e) {
+    catch (HTTPException &e) {
         // XXX: make_response<T>(ERROR_OBJ)?
         Response resp = e.render();
+        this->_write_to_fastcgi(fcgx_request, &resp, &rq);
+    }
+    // Unhandled Exception!
+    catch (...) {
+//        std::exception_ptr p = std::current_exception();
+//        std::clog <<(p ? p.__cxa_exception_type()->name() : "null") << std::endl;
+        Response resp = WebPP::InternalServerError().render();
         this->_write_to_fastcgi(fcgx_request, &resp, &rq);
     }
 
