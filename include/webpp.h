@@ -29,7 +29,6 @@ namespace WebPP {
 
     static const unsigned long STDIN_MAX = 1000000;  // TODO: load from config
 
-
     /**
      * Controller of this framework, it manages everything.
      */
@@ -144,8 +143,12 @@ namespace WebPP {
                                 const char *url_prefix
         );
 
-        // TODO: find resource http://stackoverflow.com/questions/17253690/finding-in-a-std-map-using-regex
-        //       app.find(...)
+        /**
+         * Look for an occurence in the the registered routes.
+         * @param url
+         * @return
+         */
+        RouteEntry * find(const char *url);
 
         // Getters
         const char* get_static_folder();

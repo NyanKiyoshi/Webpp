@@ -135,6 +135,18 @@ WebPP::Webpp::_write_to_fastcgi(FCGX_Request &fcgx_request, Response *response, 
 
     this->_debug_print_environment(fcgx_request.envp);
 
+    const char* uri = request->get_from_env("DOCUMENT_URI");
+
+    // REMOVE-ME
+    std::cout << "\r\n"
+              << "\r\n"
+              << "\r\n"
+              << "\r\n"
+              << uri
+              << " at "
+              << this->find(uri)
+              << "\r\n";
+
     this->_stop_wrtting_to_fastcgi_buffers();
 }
 
@@ -153,4 +165,13 @@ void WebPP::Webpp::_debug_print_environment(char **environment) {
 void WebPP::Webpp::create_rule(const std::string &rule) {
     std::vector<std::string> tokens;
     split(rule, tokens, "/");
+}
+
+WebPP::RouteEntry * WebPP::Webpp::find(const char *url) {
+    for (RouteEntry &entry : this->route_entries) {
+        if (strcmp(entry.associated_path, url) == 0) {
+            return &entry;
+        }
+    }
+    return nullptr;
 }

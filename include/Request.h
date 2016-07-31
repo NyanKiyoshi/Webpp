@@ -29,7 +29,8 @@ namespace WebPP {
         const char *REQUEST_METHOD;
         Request(FCGX_Request &request);
 
-        inline char* get_from_env(const char *name);
+        // XXX: inline does not work from outside?
+        char* get_from_env(const char *name);
         char* get_header(const char* header_name);
 
         // is_https = strcmp(REQUEST_SCHEME, "https") ? true : false

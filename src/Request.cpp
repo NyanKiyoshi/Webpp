@@ -26,7 +26,7 @@ char* WebPP::Request::get_header(const char* header_name) {
     return FCGX_GetParam(new_header_name, this->_REQUEST.envp);
 }
 
-inline char* WebPP::Request::get_from_env(const char *name) {
+char* WebPP::Request::get_from_env(const char *name) {
     return FCGX_GetParam(name, this->_REQUEST.envp);
 }
 
