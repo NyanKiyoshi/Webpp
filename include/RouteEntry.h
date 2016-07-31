@@ -33,6 +33,7 @@ namespace WebPP {
 
         // looks if the given path match the entry
         bool match(const char *&path);
+        void call_associated_view();
         
         private:
         // Arrays of before/after_rq

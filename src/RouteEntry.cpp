@@ -26,3 +26,7 @@ WebPP::RouteEntry::~RouteEntry() {
     // _array_before_request
     // _array_after_request
 }
+
+void WebPP::RouteEntry::call_associated_view() {
+    this->associated_view();
+}

@@ -29,6 +29,7 @@ const char *WebPP::Webpp::get_template_folder() {
 }
 
 void WebPP::Webpp::add_route(char *url, t_view_fn_to_call fn, std::set<const char*> allowed_methods, WebPP::t_insensitive_http_headers headers) {
+    // TODO: look for duplicates (must call a function to check)
     RouteEntry entry = RouteEntry(url, fn, allowed_methods, headers);
     this->route_entries.push_back(entry);
 }
@@ -63,8 +64,7 @@ void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp,
 }
 
 void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
-    t_insensitive_http_headers h = {{"X-test", "X-done"}};  // REMOVE-ME
-    Response resp = Response(static_cast<char*>("It's working!\n=============\n"), 200, "text/plain", &h);    // REMOVE-ME
+    Response resp = nullptr;
 
     // TODO: call before_processing_request
 
@@ -72,20 +72,31 @@ void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
     Request rq = Request(fcgx_request);
 
     try {
-        // TODO: search for endpoint
-        this->find(rq.uri);
+        // search for the requested resource or raise HTTPNotFound
+        RouteEntry *route = this->find(rq.uri);
+        // ---
 
         // TODO: call preprocess_request
-        // TODO: call view
+            // pass (Request rq)
+        // ---
+
+        // call view
+        route->call_associated_view();
+        // ---
+
         // TODO: call process_response
-        // TODO: make_response
-        this->_write_to_fastcgi(fcgx_request, &resp, &rq);
-    } catch (HTTPException e) {
-        Response resp_ = e.render();
-        this->_write_to_fastcgi(fcgx_request, &resp_, &rq);
-        // TODO: make_response(ERROR_OBJ)
+            // pass (Request rq, Response resp)
+        // ---
     }
-    // TODO: write_resp() / return Response obj
+    // Catch HTTPException or its children
+    catch (HTTPException e) {
+        // XXX: make_response<T>(ERROR_OBJ)?
+        resp = e.render();
+    }
+
+    // write response
+    // TODO: what to do if resp is nullptr? HTTP 204?
+    this->_write_to_fastcgi(fcgx_request, &resp, &rq);
 
     // XXX: it probably slowdown the request process because fcgi only flush after being called
     // XXX: we should find a way to do this after having sent the response.
