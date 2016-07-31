@@ -23,6 +23,8 @@ int main() {
     std::set<const char*> allowed_methods = {"GET"};
     WebPP::t_insensitive_http_headers headers = {};
     app_ptr->add_route("/debug", route_test, allowed_methods, headers);
+    app_ptr->add_route("/debug/1", route_test, allowed_methods, headers);
+    app_ptr->add_route("secure.cgi.local/checkout/", route_test, allowed_methods, headers);
 
     app_ptr->run();
 

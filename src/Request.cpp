@@ -9,9 +9,22 @@
 WebPP::Request::Request(FCGX_Request &request) : _REQUEST(request),
                                                  USER_AGENT(get_from_env("HTTP_USER_AGENT")),
                                                  REQUEST_METHOD(this->get_request_method()) {
-    uri = this->get_from_env("DOCUMENT_URI");
+    this->uri = this->get_from_env("DOCUMENT_URI");
+    this->host = this->get_from_env("HTTP_HOST");
+
+    this->host_uri = new char[strlen(uri) + strlen(host)];
+
+    strcpy(host_uri, this->host);
+    strcat(host_uri, this->uri);
+
     this->_find_associated_route();
 }
+
+
+WebPP::Request::~Request() {
+    delete this->host_uri;
+}
+
 
 /**
  * @param header_name
@@ -50,4 +63,8 @@ void WebPP::Request::_find_associated_route() {
         // match rule
         // if slash missing -> Redirect (301)
     // Nothing found -> 404
+}
+
+char *WebPP::Request::get_host_uri() const {
+    return host_uri;
 }

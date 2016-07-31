@@ -21,14 +21,23 @@ namespace WebPP {
 
         const FCGX_Request &_REQUEST;
 
+        // HTTP_HOST + DOCUMENT_URI
+        char *host_uri;
+        public:
+        char *get_host_uri() const;
+
+        private:
+
         inline const char* get_request_method();
         void _find_associated_route();
 
         public:
         const char* uri;
+        const char* host;
         const char *USER_AGENT;
         const char *REQUEST_METHOD;
         Request(FCGX_Request &request);
+        ~Request();
 
         // XXX: inline does not work from outside?
         char* get_from_env(const char *name);
@@ -40,7 +49,6 @@ namespace WebPP {
         // And only if they are asked for it.
         char* raw_query_string();
         char* raw_cookies();
-        char* host();
     };
 }
 

@@ -2,7 +2,6 @@
 #include <ResponseFromTemplate.h>
 #include <Request.h>
 #include <HTTPException.h>
-#include <exception>
 #include "webpp.h"
 #include "utils/string_utils.h"
 
@@ -74,7 +73,7 @@ void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
 
     try {
         // search for the requested resource or raise HTTPNotFound
-        RouteEntry *route = this->find(rq.uri);
+        RouteEntry *route = this->find(rq.get_host_uri(), rq.uri);
         // ---
 
         // TODO: call preprocess_request
@@ -159,7 +158,9 @@ WebPP::Webpp::_write_to_fastcgi(FCGX_Request &fcgx_request, Response *response, 
 
     std::cout << buffer;
 
-//    this->_debug_print_environment(fcgx_request.envp);
+    std::cout << "<pre>";
+    this->_debug_print_environment(fcgx_request.envp);
+    std::cout << "</pre>";
     this->_stop_wrtting_to_fastcgi_buffers();
 }
 
@@ -180,9 +181,10 @@ void WebPP::Webpp::create_rule(const std::string &rule) {
     split(rule, tokens, "/");
 }
 
-WebPP::RouteEntry * WebPP::Webpp::find(const char *url) {
+WebPP::RouteEntry * WebPP::Webpp::find(const char *host_uri, const char *url) {
+    // XXX: IMPROVE-ME
     for (RouteEntry &entry : this->route_entries) {
-        if (strcmp(entry.associated_path, url) == 0) {
+        if (strcmp(entry.associated_path, host_uri) == 0 || strcmp(entry.associated_path, url) == 0) {
             return &entry;
         }
     }

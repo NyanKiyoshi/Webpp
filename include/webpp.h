@@ -148,7 +148,7 @@ namespace WebPP {
          * @param url
          * @return
          */
-        RouteEntry * find(const char *url);
+        WebPP::RouteEntry *find(const char *host_uri, const char *url);
 
         // Getters
         const char* get_static_folder();
