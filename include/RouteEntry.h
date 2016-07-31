@@ -6,13 +6,18 @@
 #define WEBPP_ROUTEENTRY_H
 
 
-#include "webpp.h"
+#include <set>
+#include <ostream>
+#include "typedef_fn.h"
 
 
 namespace WebPP {
     // XXX: replace me with a struct
     class RouteEntry {
         t_insensitive_http_headers default_headers;
+        std::set<const char *> allowed_methods;
+
+        t_view_fn_to_call associated_view;
 
 
         friend std::ostream& operator<<(std::ostream &ostream, const RouteEntry &entry);
@@ -21,7 +26,9 @@ namespace WebPP {
         // path of this route entry
         const char* associated_path;
 
-        RouteEntry(const char *associated_path);
+        RouteEntry(const char *associated_path, t_view_fn_to_call fn,
+                           std::set<const char *> allowed_methods,
+                           WebPP::t_insensitive_http_headers default_headers);
         ~RouteEntry();
 
         // looks if the given path match the entry

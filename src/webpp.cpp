@@ -28,12 +28,16 @@ const char *WebPP::Webpp::get_template_folder() {
     return this->_TEMPLATE_FOLDER;
 }
 
-void WebPP::Webpp::add_route(char *url, void (*fn)(...), std::set<const char*> allowed_methods, WebPP::t_insensitive_http_headers *headers) {
-
+void WebPP::Webpp::add_route(char *url, t_view_fn_to_call fn, std::set<const char*> allowed_methods, WebPP::t_insensitive_http_headers headers) {
+    RouteEntry entry = RouteEntry(url, fn, allowed_methods, headers);
+    this->route_entries.push_back(entry);
 }
 
-void WebPP::Webpp::add_route(char **urls, void (*fn)(...), std::set<const char*> allowed_methods, WebPP::t_insensitive_http_headers *headers) {
-
+void WebPP::Webpp::add_route(std::vector<char *> &urls, t_view_fn_to_call fn, std::set<const char *> allowed_methods,
+                             WebPP::t_insensitive_http_headers headers) {
+    for (const auto &url : urls) {
+        this->add_route(url, fn, allowed_methods, headers);
+    }
 }
 
 void WebPP::Webpp::before_request(t_before_request_function fn) {

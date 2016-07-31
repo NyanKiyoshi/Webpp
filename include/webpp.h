@@ -9,8 +9,10 @@
 #include <set>
 #include "Logger.h"
 #include "Response.h"
-#include "Blueprint.h"
 #include "Request.h"
+#include "Blueprint.h"
+#include "typedef_fn.h"
+#include "RouteEntry.h"
 
 
 #define DEFAULT_THREAD_COUNT 20
@@ -21,9 +23,6 @@
 
 
 namespace WebPP {
-    // Type of functions to call
-    typedef void (*t_before_request_function)(Request);
-    typedef void (*t_after_request_function)(Request, Response);
 
     // Blueprints
     typedef std::string t_str_blueprint_name;
@@ -49,6 +48,7 @@ namespace WebPP {
         // List of registered blueprints
         // <instance name, instance>
         std::map<const t_str_blueprint_name, Blueprint*> _blueprints = {};
+        std::vector<RouteEntry> route_entries;
 
         // Logger
         Logger _logger;
@@ -88,8 +88,23 @@ namespace WebPP {
         // TODO: map regexp routes
         // TODO: get options as dict
         // register routes
-        void add_route(char *url,   void (*fn)(...), std::set<const char *> allowed_methods = {"GET"}, t_insensitive_http_headers *headers = {});
-        void add_route(char **urls, void (*fn)(...), std::set<const char *> allowed_methods = {"GET"}, t_insensitive_http_headers *headers = {});  // array of "char *url"
+        void add_route(
+                // TODO: needs to handle #26
+                char *url,
+
+                // TODO: (*fn)(Request, URIParamsDict)->URIParamsDict=parsed from route regex groups
+                // FIXME: we should be able to *return* nothing, a string or a ResponseObj. Maybe pass Response_ptr as arg?
+                t_view_fn_to_call,
+
+                std::set<const char *> allowed_methods = {"GET"},
+                t_insensitive_http_headers headers = {}
+        );
+        void add_route(
+                std::vector<char *> &urls,   // array of "char *url"
+                t_view_fn_to_call,
+                std::set<const char *> allowed_methods = {"GET"},
+                t_insensitive_http_headers headers = {}
+        );
 
         // register extensions
             // will call init() ... blblbl
