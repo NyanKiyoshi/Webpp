@@ -7,7 +7,7 @@
 using namespace WebPP;
 
 
-ResponseFromTemplate::ResponseFromTemplate(t_template path, uint16_t response_code, t_insensitive_http_headers *headers)
+ResponseFromTemplate::ResponseFromTemplate(std::string path, const char *response_code, t_insensitive_http_headers *headers)
         : _path(path), _response_code(response_code) {
 
 }

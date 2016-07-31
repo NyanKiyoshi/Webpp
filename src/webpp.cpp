@@ -64,7 +64,7 @@ void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp,
 }
 
 void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
-    Response resp = nullptr;
+    Response *resp_ptr = nullptr;
 
     // TODO: call before_processing_request
 
@@ -91,12 +91,13 @@ void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
     // Catch HTTPException or its children
     catch (HTTPException e) {
         // XXX: make_response<T>(ERROR_OBJ)?
-        resp = e.render();
+        Response resp = e.render();
+        this->_write_to_fastcgi(fcgx_request, &resp, &rq);
     }
 
     // write response
     // TODO: what to do if resp is nullptr? HTTP 204?
-    this->_write_to_fastcgi(fcgx_request, &resp, &rq);
+//    this->_write_to_fastcgi(fcgx_request, resp_ptr, &rq);
 
     // XXX: it probably slowdown the request process because fcgi only flush after being called
     // XXX: we should find a way to do this after having sent the response.
@@ -149,7 +150,7 @@ WebPP::Webpp::_write_to_fastcgi(FCGX_Request &fcgx_request, Response *response, 
 
     std::cout << buffer;
 
-    this->_debug_print_environment(fcgx_request.envp);
+//    this->_debug_print_environment(fcgx_request.envp);
     this->_stop_wrtting_to_fastcgi_buffers();
 }
 

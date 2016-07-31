@@ -18,7 +18,7 @@ namespace WebPP {
     };
     typedef std::map<std::string, std::string, comp> t_insensitive_http_headers;
 
-    typedef char *t_template;
+    typedef char t_template;
 }
 
 

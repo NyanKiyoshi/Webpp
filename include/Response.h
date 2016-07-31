@@ -17,8 +17,8 @@ namespace WebPP {
      */
     class Response {
         private:
-        t_template _body;
-        uint16_t _code;
+        std::string _body;
+        const char *_status_code;
         std::string _mime_type;
 
         t_insensitive_http_headers *headers = {};
@@ -37,7 +37,7 @@ namespace WebPP {
          * @param headers Those headers are case insentive.
          * @return
          */
-        Response(t_template body, uint16_t response_code = 200,
+        Response(std::string body, const char *response_code = "200",
                  std::string mimetype = "text/html", t_insensitive_http_headers *headers = &default_headers);
 
         void generate_raw_headers(std::ostringstream &string_stream);

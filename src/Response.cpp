@@ -10,10 +10,12 @@
 WebPP::t_insensitive_http_headers WebPP::Response::default_headers = {};
 
 
+// FIXME: body should be a reference, not a copy
+// TODO: body<T>
 // TODO: handle response code
-WebPP::Response::Response(t_template body, uint16_t response_code,
+WebPP::Response::Response(std::string body, const char *response_code,
                           std::string mimetype, t_insensitive_http_headers *headers)
-        : _body(body), _code(response_code), _mime_type(mimetype), headers(headers) {
+        : _body(body), _status_code(response_code), _mime_type(mimetype), headers(headers) {
 
 }
 
@@ -21,8 +23,9 @@ void WebPP::Response::generate_raw_headers(std::ostringstream &string_stream) {
     // Copy the headers before modifying them
     t_insensitive_http_headers temp_headers = *(this->headers);
 
-    // override the content-type header
-    temp_headers["Content-type"] = _mime_type;
+    // override the Status and Content-Type headers
+    temp_headers["Status"] = this->_status_code;
+    temp_headers["Content-type"] = this->_mime_type;
 
     // loop through the headers
     // append header and add a CRLF ending according to the RFC2616
