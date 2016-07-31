@@ -25,6 +25,7 @@ namespace WebPP {
         void _find_associated_route();
 
         public:
+        const char* uri;
         const char *USER_AGENT;
         const char *REQUEST_METHOD;
         Request(FCGX_Request &request);

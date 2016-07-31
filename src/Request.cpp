@@ -9,6 +9,8 @@
 WebPP::Request::Request(FCGX_Request &request) : _REQUEST(request),
                                                  USER_AGENT(get_from_env("HTTP_USER_AGENT")),
                                                  REQUEST_METHOD(this->get_request_method()) {
+    uri = this->get_from_env("DOCUMENT_URI");
+    this->_find_associated_route();
 }
 
 /**
