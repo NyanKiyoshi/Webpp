@@ -65,22 +65,27 @@ void WebPP::Webpp::register_blueprint(WebPP::Blueprint *bp,
 void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
     t_insensitive_http_headers h = {{"X-test", "X-done"}};  // REMOVE-ME
     Response resp = Response(static_cast<char*>("It's working!\n=============\n"), 200, "text/plain", &h);    // REMOVE-ME
+
+    // TODO: call before_processing_request
+
+    // generate request object
     Request rq = Request(fcgx_request);
 
     try {
-        // TODO: call before_processing_request
-        // TODO: generate request object
         // TODO: search for endpoint
+        this->find(rq.uri);
+
         // TODO: call preprocess_request
         // TODO: call view
         // TODO: call process_response
         // TODO: make_response
-    } catch (HTTPException) {
+        this->_write_to_fastcgi(fcgx_request, &resp, &rq);
+    } catch (HTTPException e) {
+        Response resp_ = e.render();
+        this->_write_to_fastcgi(fcgx_request, &resp_, &rq);
         // TODO: make_response(ERROR_OBJ)
     }
     // TODO: write_resp() / return Response obj
-
-    this->_write_to_fastcgi(fcgx_request, &resp, &rq);
 
     // XXX: it probably slowdown the request process because fcgi only flush after being called
     // XXX: we should find a way to do this after having sent the response.
@@ -134,19 +139,6 @@ WebPP::Webpp::_write_to_fastcgi(FCGX_Request &fcgx_request, Response *response, 
     std::cout << buffer;
 
     this->_debug_print_environment(fcgx_request.envp);
-
-    const char* uri = request->get_from_env("DOCUMENT_URI");
-
-    // REMOVE-ME
-    std::cout << "\r\n"
-              << "\r\n"
-              << "\r\n"
-              << "\r\n"
-              << uri
-              << " at "
-              << this->find(uri)
-              << "\r\n";
-
     this->_stop_wrtting_to_fastcgi_buffers();
 }
 
@@ -173,5 +165,5 @@ WebPP::RouteEntry * WebPP::Webpp::find(const char *url) {
             return &entry;
         }
     }
-    return nullptr;
+    throw WebPP::NotFound();
 }
