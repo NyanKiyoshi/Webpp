@@ -6,25 +6,25 @@
 #include <iostream>
 #include "Request.h"
 
+
+// XXX: we should probably replace the "const char*" with "const std::string"
 WebPP::Request::Request(FCGX_Request &request) : _REQUEST(request),
                                                  USER_AGENT(get_from_env("HTTP_USER_AGENT")),
                                                  REQUEST_METHOD(this->get_request_method()) {
-    this->uri = this->get_from_env("DOCUMENT_URI");
-    this->host = this->get_from_env("HTTP_HOST");
+    this->URI = this->get_from_env("DOCUMENT_URI");
+    this->HOST = this->get_from_env("HTTP_HOST");
 
-    this->host_uri = new char[strlen(uri) + strlen(host)];
+    this->host_uri = new char[strlen(URI) + strlen(HOST)];
 
-    strcpy(host_uri, this->host);
-    strcat(host_uri, this->uri);
+    strcpy(host_uri, this->HOST);
+    strcat(host_uri, this->URI);
 
     this->_find_associated_route();
 }
 
-
 WebPP::Request::~Request() {
     delete this->host_uri;
 }
-
 
 /**
  * @param header_name
