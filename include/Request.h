@@ -46,6 +46,10 @@ namespace WebPP {
         /**
          * 1. The view receives the Request object as parameter
          * 2. The view returns the response by calling Request.make_reponse(...) and passing as parameter the response
+         * 3. The controller call the returned lambda function that will write on the fcgi stream buffer
+         *
+         * It forces the developper to return and not call one time and then another time, ...
+         * And then, only generate the response one time.
          * @param response
          * @return
          */
