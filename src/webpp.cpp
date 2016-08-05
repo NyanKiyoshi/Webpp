@@ -73,7 +73,7 @@ void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
 
     try {
         // search for the requested resource or raise HTTPNotFound
-        RouteEntry *route = this->find(rq.get_host_uri(), rq.uri);
+        RouteEntry *route = this->find(rq.get_host_uri(), rq.URI);
         // ---
 
         // TODO: call preprocess_request
@@ -97,8 +97,9 @@ void WebPP::Webpp::_process_request(FCGX_Request fcgx_request) {
     }
     // Unhandled Exception!
     catch (...) {
-//        std::exception_ptr p = std::current_exception();
-//        std::clog <<(p ? p.__cxa_exception_type()->name() : "null") << std::endl;
+        // TODO: logme
+        //       std::exception_ptr p = std::current_exception();
+        //       std::clog <<(p ? p.__cxa_exception_type()->name() : "null") << std::endl;
         Response resp = WebPP::InternalServerError().render();
         this->_write_to_fastcgi(fcgx_request, &resp, &rq);
     }

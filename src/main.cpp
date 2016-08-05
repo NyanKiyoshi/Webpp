@@ -25,6 +25,8 @@ int main() {
     app_ptr->add_route("/debug", route_test, allowed_methods, headers);
     app_ptr->add_route("/debug/1", route_test, allowed_methods, headers);
     app_ptr->add_route("secure.cgi.local/checkout/", route_test, allowed_methods, headers);
+    app_ptr->add_route("secure.cgi.local/secure_coffee/", route_test, allowed_methods, headers);
+    // TODO: alias "secure.cgi.local/secure_coffee" -> redirects to ^^^^^^^^^^
 
     app_ptr->run();
 
